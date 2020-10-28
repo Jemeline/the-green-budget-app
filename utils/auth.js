@@ -3,7 +3,7 @@ const sha256 = require('js-sha256');
 const { request } = require("express");
 
 function generateJWTToken(data) {
-    return jwt.sign(data, process.env.SECRET_KEY, { expiresIn: process.env.TOKEN_EXP });
+    return jwt.sign(data, process.env.SECRET_KEY, { expiresIn: '5' });
 }
 function verifyJWTToken(jwtToken) {
     let decoded = null
