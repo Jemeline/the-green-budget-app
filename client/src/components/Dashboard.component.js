@@ -3,8 +3,6 @@ import FakeHeader from './FakeHeader/FakeHeader.js';
 import './FakeHeader/FakeHeader.css';
 import './Dashboard.css';
 import Widget from './Widget/Widget.js';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import PieChart from './PieChart/PieChart.js'
 
 
@@ -37,19 +35,7 @@ class Dashboard extends Component {
                 <Widget direction={'left'} text={'edit'}/>
             </div>
             <div class="column middle">
-                <ToggleButtonGroup 
-                className={'ButtonGroup'}
-                >
-                    <ToggleButton value='left'>
-                        Left
-                    </ToggleButton>
-                    <ToggleButton value='center'>
-                        Center
-                    </ToggleButton>
-                    <ToggleButton value='right'>
-                        Right
-                    </ToggleButton>
-                </ToggleButtonGroup>
+                
                 <div className={'Chart'}>
                 <PieChart className={'Chart'}/>
                 </div>
