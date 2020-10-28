@@ -1,0 +1,29 @@
+.column {
+    float: left;
+}
+
+.left, .right {
+    width: 25%;
+}
+
+.middle {
+    width: 50%;
+}
+
+.row {
+    background-color: #2B9C32
+}
+
+.ButtonGroup {
+    margin-top: 50px;
+    background-color: #412234;
+    color: white;
+}
+
+.Chart {
+    width: 500px;
+    height: 500px;
+    margin-left: 16%;
+    margin-right: 50%;
+    margin-top: 50px;
+}

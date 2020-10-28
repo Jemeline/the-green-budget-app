@@ -1,0 +1,28 @@
+.Header {
+    text-align: center;
+    background-color: #412234;
+    padding-bottom: 75px;
+    padding-top: 30px;
+    width: 100%;
+  }
+
+  
+  .Button {
+    background-color: #2B9C32;
+    color: white;
+    float: right;
+    margin-right: 30px;
+  }
+  
+  
+  .Title {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color: green;
+    display: inline-flex;
+    text-align: center;
+    float: left;
+    margin-left: 75px;
+  }
+  
+  
+  
