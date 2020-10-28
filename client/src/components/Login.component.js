@@ -52,7 +52,7 @@ class Login extends Component {
           .then( (response) => {
               sessionStorage.setItem('token', response.data.token);
               if (sessionStorage.getItem('token')){
-                axios.post('http://localhost:5000/api/users/validate-user', {
+                axios.post('https://green-budget-app.herokuapp.com/api/users/validate-user', {
                 sessionUser:this.state.emailLogin,
                 email: this.state.emailLogin,
                 password: this.state.passwordLogin
