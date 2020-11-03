@@ -1,9 +1,7 @@
 import React, {Component } from 'react';
-import FakeHeader from './FakeHeader/FakeHeader.js';
-import './FakeHeader/FakeHeader.css';
-import './Dashboard.css';
+import '../css/Dashboard.css';
 import Widget from './Widget/Widget.js';
-import PieChart from './PieChart/PieChart.js'
+import PieChart from './PieChart/PieChart.js';
 
 
 
@@ -14,20 +12,14 @@ class Dashboard extends Component {
         };   
     }
 
-    handleLogout = () => {
-        sessionStorage.removeItem('user');
-        sessionStorage.removeItem('admin');
-        sessionStorage.removeItem('token');
-        this.props.history.push('/login');
+   
+    componentDidMount(){      
     }
-
+    
     
     render() {
         return (
-            <>
-            <div>
-                <FakeHeader className={'Header'} handleLogout={this.handleLogout}/>
-            </div>
+            
             <div className="row">
             <div className={"column left"}>
                 <Widget direction={'left'} text={'+'} />
@@ -45,8 +37,7 @@ class Dashboard extends Component {
                 <Widget direction={'right'} text={'check my progress'}/>
                 <Widget direction={'right'} text={'impact'}/>
             </div>
-          </div>
-        </> 
+          </div> 
         )};
 }
  

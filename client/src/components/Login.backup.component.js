@@ -1,103 +1,178 @@
 import React, { Component} from 'react';
 import {Alert,Button,Card,CardHeader,CardBody,Col, Container, Nav, NavLink, NavItem,Row,TabPane,TabContent,Form,
     FormGroup, Label, Input,} from 'reactstrap';
-import {generateJWT, validateJWT, getUser, handleLoginUser, generateTokenValidationPayload, generateRegisterUserPayload, registerUser} from '../utils/common';
+import axios from 'axios';
+
+async function getJWTToken(userData) {
+    // const res = await axios.post('https://green-budget-app.herokuapp.com/api/users/generate-token', {
+    const res = await axios.post('http://localhost:5000/api/generate-token', {
+            user: userData
+    })
+    return res;
+}
 
 class Login extends Component {
     constructor(props){
         super(props);
         this.state = {
-            activeTab: '1',
             emailLogin : '',
             passwordLogin : '',
+            activeTab: '1',
+            invalidLoginAlert:false,
+            alreadyLoggedInAlert:false,
             emailRegister:'',
             firstnameRegister:'',
             lastnameRegister:'',
             passwordRegister : '',
             passwordConfirm : '',
+            invalidPasswordLengthAlert:false,
+            invalidPasswordMatchAlert:false,
+            failedRegistrationAlert:false,
+            alreadyLoggedInRegisterAlert:false,
             alertMessage:'',
             registrationAlert:false,
-            alertOn: false
-    
-        };
+            loginAlert: false
+
+        };   
         this.handleActiveTab = this.handleActiveTab.bind(this);
         this.handleChange = this.handleChange.bind(this);
     }
     handleActiveTab(tab) {
         if (this.state.activeTab !== tab) {
           this.setState({ activeTab: tab });
-          this.onDismiss(); 
+          
         }
     }
-    handleAlert(message){
+    handleAlert(message,alert){
         this.setState({ alertMessage:message});
-        this.setState({ alertOn:true});
+        this.setState({ [alert]:true});
     }
     handleChange(event) {
         this.setState({ [event.target.name]:event.target.value});
     }
-    onDismiss = () => {this.setState({alertOn:false})};
+
     
-    async handleLogin(){
-      try{
-        this.onDismiss();
-        if (!getUser()){
-          const token = await generateJWT(this.state.emailLogin);
-          const body = generateTokenValidationPayload(this.state,token).body;
-          const headers= generateTokenValidationPayload(this.state,token).headers;
-          const data = await validateJWT(body,headers);
-          if (!data){
-            this.handleAlert("We do not recognize your username and/or password");
-          } else {
-            handleLoginUser(data);
-            this.props.history.push('/dashboard');
-          }  
-        } else {
-          this.handleAlert("You are Already Logged In");
-        };
-      } catch (error){
-        console.log(error);
-        this.handleAlert("Oops... Something Went Wrong");
-      }
-    };
-    
-    async handleRegister(){
-      try{
-        this.onDismiss();
-        if (this.state.passwordRegister.length < 8){
-          this.handleAlert("Your password must have at least 8 characters");
-        } else if (this.state.passwordRegister !== this.state.passwordConfirm){
-            this.handleAlert("Your passwords do not match");
-        } else if (this.state.emailRegister.length === 0 || this.state.firstnameRegister.length === 0 ||this.state.lastnameRegister.length === 0){
-            this.handleAlert("You must fill out all fields");
-        } else{
-            if (!getUser()){
-              const token = await generateJWT(this.state.emailRegister);
-              const body = generateRegisterUserPayload(this.state,token).body;
-              const headers= generateRegisterUserPayload(this.state,token).headers;
-              const data = await registerUser(body,headers);
-              if (!data){
-                this.handleAlert("Oops... Something Went Wrong");
-              } else {
-                handleLoginUser(data);
-                this.props.history.push('/dashboard');
-              }  
+    handleSubmit = () => {
+        getJWTToken(this.state.emailLogin)
+          .then( (response) => {
+              sessionStorage.setItem('token', response.data.token);
+              if (sessionStorage.getItem('token')){
+                // axios.post('https://green-budget-app.herokuapp.com/api/users/validate-user', {
+                axios.post('http://localhost:5000/api/users/validate-user', {
+                sessionUser:this.state.emailLogin,
+                email: this.state.emailLogin,
+                password: this.state.passwordLogin
+                },{
+                    headers: {
+                      'Authorization': `Bearer ${sessionStorage.getItem('token')}` 
+                }})
+                    .then( (response) => {  
+                    if (this.getSessionUser() === null) {
+                        sessionStorage.setItem('user', response.data.data.email);
+                        sessionStorage.setItem('admin', response.data.data.isAdmin);
+                        sessionStorage.setItem('name', response.data.data.firstname);
+                        this.props.history.push('/dashboard');
+                    }else{
+                        this.setState({ alertMessage:"Please Logout First"});
+                        this.setState({ loginAlert:true});
+                    }
+                    
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        this.setState({ alertMessage:"We do not recognize your username and/or password"});
+                        this.setState({ loginAlert:true});
+                })
             } else {
-              this.handleAlert("You are Already Logged In");
-            };  
-        }  
-      } catch (error){
-        console.log(error);
-        this.handleAlert("Oops... Something Went Wrong");
-      }
-    };
+                this.setState({ alertMessage:"Oops... Something Went Wrong"});
+                this.setState({ loginAlert:true});
+            }
+
+            
+          })
+          .catch(err => {
+            this.setState({ invalidLoginAlert:true});
+        });  
+    }
+
+    handleSubmitRegister = () => {
+        this.onDismiss();
+        if(this.state.passwordRegister.length < 8){
+            this.handleAlert("Your password must have at least 8 characters",'registrationAlert');
+        } else if (this.state.passwordRegister !== this.state.passwordConfirm){
+            this.handleAlert("Your passwords do not match",'registrationAlert');
+        } else if (this.state.emailRegister.length === 0 || this.state.firstnameRegister.length === 0 ||this.state.lastnameRegister.length === 0){
+            this.handleAlert("You must fill out all fields",'registrationAlert');
+        } else{
+            if (this.getSessionUser() !== null){
+                this.handleAlert("Please Logout First",'registrationAlert');
+            }else{
+                getJWTToken(this.state.emailRegister)
+          
+          .then( (response) => {
+              sessionStorage.setItem('token', response.data.token);
+              if (sessionStorage.getItem('token')){
+                // axios.post('https://green-budget-app.herokuapp.com/api/users/create-user', {
+                axios.post('http://localhost:5000/api/users/create-user', {
+                sessionUser:this.state.emailRegister,
+                email: this.state.emailRegister,
+                password: this.state.passwordRegister,
+                firstname:this.state.firstnameRegister,
+                lastname: this.state.lastnameRegister,
+                },{
+                    headers: {
+                      'Authorization': `Bearer ${sessionStorage.getItem('token')}` 
+                }})
+                    .then( (response) => {  
+                        // console.log(response.data.data.email);
+                        sessionStorage.setItem('user', response.data.data.email);
+                        sessionStorage.setItem('admin', response.data.data.isAdmin);
+                        sessionStorage.setItem('name', response.data.data.firstname);
+                        this.props.history.push('/dashboard');
+                    
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        this.setState({ alertMessage:"Oops... Something Went Wrong"});
+                        this.setState({ registrationAlert:true});
+                })
+            } else {
+                this.setState({ alertMessage:"Oops... Something Went Wrong"});
+                this.setState({ registrationAlert:true});
+            }
+
+            
+          })
+          .catch(err => {
+            this.setState({ alertMessage:"Oops... Something Went Wrong"});
+            this.setState({ registrationAlert:true});
+        });  
+
+            }
+            
+        }
+    }
+
+    onDismiss = () => {this.setState({loginAlert:false});
+                this.setState({ registrationAlert:false});
+
+    }
+    onDismissAlreadyLoggedIn = () => this.setState({onDismissAlreadyLoggedIn:false});
+    onDismissReg = () => this.setState({registrationAlert:false});
+
+    getSessionUser = () => {
+        return sessionStorage.getItem('user') || null;
+    }
+
+    componentDidMount(){    
+    }
     
     render() {
         return (
             <div>
             <h4>Login</h4>
             <p>This is my Login Page.</p>
-    
+
             <Container style={{width:"50%"}}>
                 <Row>
                     <Col>
@@ -122,7 +197,7 @@ class Login extends Component {
                                 <Row>
                                 <Col>
                                     <CardBody>
-                                        <Alert color="danger" isOpen={this.state.alertOn} toggle={this.onDismiss}>
+                                        <Alert color="danger" isOpen={this.state.loginAlert} toggle={this.onDismiss}>
                                                 {this.state.alertMessage}
                                         </Alert>
                                         <Container >
@@ -149,7 +224,7 @@ class Login extends Component {
                                                 />
                                                 </FormGroup>
                                             </Col>
-                                            <Button onClick={async () => {await this.handleLogin();}}
+                                            <Button onClick={this.handleSubmit}
                                                     color="success"
                                             >Login</Button>
                                         </Form>
@@ -162,7 +237,7 @@ class Login extends Component {
                                 <Row>
                                     <Col>
                                         <CardBody>
-                                            <Alert color="danger" isOpen={this.state.alertOn} toggle={this.onDismiss}>
+                                            <Alert color="danger" isOpen={this.state.registrationAlert} toggle={this.onDismiss}>
                                                 {this.state.alertMessage}
                                             </Alert>
                                             <Container>
@@ -209,7 +284,7 @@ class Login extends Component {
                                                     </Col>
                                                 </Row>
                                                 
-                                                <Button onClick={async () => {await this.handleRegister();}}
+                                                <Button onClick={this.handleSubmitRegister}
                                                         color="success"
                                                 >Register</Button>
                                             </Form>

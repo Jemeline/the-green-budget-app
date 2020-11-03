@@ -26,8 +26,9 @@ module.exports = (req, res, next) => {
         if(!verified) {
             errors.push("Invalid Token");
         }
-        if (verified['user'] != req.body.sessionUser){
+        else if (verified['user'] != req.body.sessionUser){
             errors.push("Invalid User-Token Combo");
+        } else {
         }
     }
     // END JWT Validation
@@ -54,9 +55,10 @@ module.exports = (req, res, next) => {
             return;
         }
         // const token = utils.generateJWTToken(req.body.email);
+        delete rows[0]['password'];
         res.json({
             "message":"success",
-            "data":rows
+            "data":rows[0]
         })
       });      
 };
