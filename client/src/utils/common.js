@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 export async function generateToken(userData) {
-    const res = await axios.post('https://green-budget-app.herokuapp.com/api/generate-token', {
-    // const res = await axios.post('http://localhost:5000/api/generate-token', {
+    // const res = await axios.post('https://green-budget-app.herokuapp.com/api/generate-token', {
+    const res = await axios.post('http://localhost:5000/api/generate-token', {
             user: userData
     })
     return await res;
@@ -14,8 +14,8 @@ export async function generateJWT(userData){
 
 async function validateToken(userData, headers) {
     try {
-        const res = await axios.post('https://green-budget-app.herokuapp.com/api/users/validate-user', userData, headers);
-        // const res = await axios.post('http://localhost:5000/api/users/validate-user', userData, headers);
+        // const res = await axios.post('https://green-budget-app.herokuapp.com/api/users/validate-user', userData, headers);
+        const res = await axios.post('http://localhost:5000/api/users/validate-user', userData, headers);
         return await res;
     } catch (error){
         console.log(error);
@@ -29,8 +29,8 @@ export async function validateJWT(userData,headers){
 
 async function register(userData, headers) {
     try {
-        const res = await axios.post('https://green-budget-app.herokuapp.com/api/users/create-user', userData, headers);
-        // const res = await axios.post('http://localhost:5000/api/users/create-user', userData, headers);
+        // const res = await axios.post('https://green-budget-app.herokuapp.com/api/users/create-user', userData, headers);
+        const res = await axios.post('http://localhost:5000/api/users/create-user', userData, headers);
         return await res;
     } catch (error){
         console.log(error);
