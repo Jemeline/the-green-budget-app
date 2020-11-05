@@ -15,7 +15,27 @@ function verifyJWTToken(jwtToken) {
     }   
 };
 
+function processJWT(req) {
+    let error=null
+    //// Begin JWT Validation
+    if(!req.headers['authorization']){
+        return error = "Missing Authorization Header";
+    }else{
+        token = req.headers['authorization'].replace('Bearer ', '');
+        verified = verifyJWTToken(token);
+        if(!verified) {
+            return error = "Invalid Token";
+        }
+        if (verified['user'] != req.body.sessionUser){
+            return error = "Invalid User-Token Combo";
+        }
+        return error;
+    }
+    //// END JWT Validation
+};
+
 module.exports = {
     generateJWTToken,
-    verifyJWTToken
+    verifyJWTToken,
+    processJWT
 }

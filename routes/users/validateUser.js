@@ -22,7 +22,7 @@ module.exports = (req, res, next) => {
         errors.push("Missing authorization header.");
     } else{
         token = req.headers['authorization'].replace('Bearer ', '');
-        verified = utils.verifyJWTToken(token)
+        verified = utils.verifyJWTToken(token);
         if(!verified) {
             errors.push("Invalid Token");
         }

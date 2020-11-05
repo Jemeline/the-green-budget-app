@@ -92,6 +92,26 @@ users.post('/update-user',updateUser);
 // Failed request returns 400
 users.post('/delete-user',deleteUser);
 
+// VALIDATE
+// Validates user for Login
+// Consumes json parameters: email, sessionUser, password
+// Example: 
+//        {"sessionUser":"jada_pfeiffer@email.com",
+        // "email":"jada_pfeiffer@email.com",
+        // "password":"12345678"}
+// Returns json
+// Example: 
+// {
+//         "message": "success",
+//         "data": {
+//             "id": 3,
+//             "email": "jada_pfeiffer@email.com",
+//             "firstname": "jada",
+//             "lastname": "Jada",
+//             "isAdmin": 0
+//         }
+// }
+// Failed request returns 400
 users.post('/validate-user',validateUser);
 
 
