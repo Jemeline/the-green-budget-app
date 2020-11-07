@@ -1,7 +1,8 @@
 import React, { Component} from 'react';
 import {Alert,Button,Card,CardHeader,CardBody,Col, Container, Nav, NavLink, NavItem,Row,TabPane,TabContent,Form,
     FormGroup, Label, Input,} from 'reactstrap';
-import {generateJWT, validateJWT, getUser, handleLoginUser, generateTokenValidationPayload, generateRegisterUserPayload, registerUser} from '../utils/common';
+import {getUser, handleLoginUser, generateTokenValidationPayload, generateRegisterUserPayload} from '../utils/common';
+import {generateToken, validateToken, register} from '../utils/apiCalls';
 
 class Login extends Component {
     constructor(props){
@@ -42,10 +43,10 @@ class Login extends Component {
       try{
         this.onDismiss();
         if (!getUser()){
-          const token = await generateJWT(this.state.emailLogin);
+          const token = await generateToken(this.state.emailLogin);
           const body = generateTokenValidationPayload(this.state,token).body;
           const headers= generateTokenValidationPayload(this.state,token).headers;
-          const data = await validateJWT(body,headers);
+          const data = await validateToken(body,headers);
           if (!data){
             this.handleAlert("We do not recognize your username and/or password");
           } else {
@@ -72,10 +73,10 @@ class Login extends Component {
             this.handleAlert("You must fill out all fields");
         } else{
             if (!getUser()){
-              const token = await generateJWT(this.state.emailRegister);
+              const token = await generateToken(this.state.emailRegister);
               const body = generateRegisterUserPayload(this.state,token).body;
               const headers= generateRegisterUserPayload(this.state,token).headers;
-              const data = await registerUser(body,headers);
+              const data = await register(body,headers);
               if (!data){
                 this.handleAlert("Oops... Something Went Wrong");
               } else {

@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 
+
 class PieChart extends Component {
 	render() {
 		const options = {

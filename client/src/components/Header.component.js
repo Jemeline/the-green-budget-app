@@ -60,7 +60,7 @@ class Header extends Component {
     </NavbarCollapse>
     <Button as={Link} variant="outline-primary"hidden={!this.state.userIsActive} to="/login" >Login</Button>
     <NavDropdown id="nav-dropdown" hidden={this.state.userIsActive} title={"Welcome, " + capitalizeFirst(sessionStorage.getItem('name'))+ "  "}>
-        <NavDropdown.Item>Action</NavDropdown.Item>
+        <NavDropdown.Item as={Link} to="/budget">Budget</NavDropdown.Item>
         <NavDropdown.Item>Another action</NavDropdown.Item>
         <NavDropdown.Item>Something</NavDropdown.Item>
         <NavDropdown.Divider />

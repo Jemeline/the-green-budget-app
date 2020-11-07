@@ -33,7 +33,7 @@ module.exports = (req, res, next) => {
         if(!verified) {
             errors.push("Invalid Token");
         }
-        if (verified['user'] != req.body.SessionUser){
+        if (verified['user'] != req.body.sessionUser){
             errors.push("Invalid User-Token Combo");
         }
     }
@@ -48,6 +48,7 @@ module.exports = (req, res, next) => {
                             lastname:req.body.lastname,
                             isAdmin:0
                             };
+    // const token = utils.generateJWTToken(req.body.email);
     db.run(`INSERT INTO users_table (email, password, firstname, lastname, isAdmin) VALUES (?,?,?,?,?)`, [req.body.email,sha256((req.body.password).toString()),req.body.firstname,req.body.lastname, 0], function(err) {
     if (err) {
         res.status(400).json({"error":err.message});

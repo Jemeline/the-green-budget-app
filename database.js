@@ -39,10 +39,9 @@ db.run(`CREATE TABLE IF NOT EXISTS users_table (
 db.run(`CREATE TABLE IF NOT EXISTS expenses (
     id INTEGER PRIMARY KEY AUTOINCREMENT, 
     email text NOT NULL, 
-    year int NOT NULL CHECK (year BETWEEN 1900 AND 2100),
-    month int NOT NULL CHECK (month BETWEEN 1 AND 12),
-    day int NOT NULL CHECK (day BETWEEN 1 AND 31),
+    date TEXT NOT NULL CHECK (date IS date(date)),
     category text NOT NULL,
+    subcategory text NOT NULL,
     description text NOT NULL,
     amount real NOT NULL,
     FOREIGN KEY (email) REFERENCES
@@ -53,8 +52,8 @@ db.run(`CREATE TABLE IF NOT EXISTS expenses (
         console.log(err.message);  
     }
 }); 
-// db.run(`INSERT INTO expenses (email, year, month, day, category, description, amount) VALUES (?,?,?,?,?,?,?)`, 
-// ["admin@email.com",2020,11,02,"social","Root Cellar", 25.25], function(err) {
+// db.run(`INSERT INTO expenses (email, date, category, subcategory,description, amount) VALUES (?,?,?,?,?,?)`, 
+// ["admin@email.com",'2020-12-04',"Social","Dining","Root Cellar", 25.25], function(err) {
 //     if (err) {
 //       console.log(err.message);
 //     }

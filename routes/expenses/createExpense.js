@@ -2,9 +2,8 @@ const db = require("../../database.js");
 const utils = require("../../utils/auth");
 module.exports = (req, res, next) => {
     try{
-        if (!req.body.email || !req.body.year || !req.body.month
-            || !req.body.day || !req.body.category || !req.body.description || 
-            !req.body.amount || !req.body.sessionUser) {
+        if (!req.body.email || !req.body.date || !req.body.category || !req.body.description || 
+            !req.body.amount || !req.body.sessionUser || !req.body.subcategory ) {
                 res.status(400).json({"errors":"Missing Request Parameter"});
                 return;
         }
@@ -12,17 +11,16 @@ module.exports = (req, res, next) => {
         if (!verified){
             const request_data = {  
                 email:req.body.email,
-                year:req.body.year,
-                month:req.body.month,
-                day:req.body.day,
-                category:req.body.category.toUpperCase(),
-                description:req.body.description.charAt(0).toUpperCase() + req.body.description.slice(1).toLowerCase(),
+                date:req.body.date,
+                category:req.body.category,
+                subcategory:req.body.subcategory,
+                description:req.body.description,
                 amount:req.body.amount
             };
-            db.run(`INSERT INTO expenses (email, year, month, day, 
-                    category, description, amount) VALUES (?,?,?,?,?,?,?)`, 
-                    [request_data.email,request_data.year, request_data.month,
-                    request_data.day,request_data.category, request_data.description,
+            db.run(`INSERT INTO expenses (email, date, category,
+                subcategory, description, amount) VALUES (?,?,?,?,?,?)`, 
+                    [request_data.email,request_data.date,request_data.category, 
+                    request_data.subcategory,request_data.description,
                     request_data.amount], 
                 function(err) {
                         if (err) {

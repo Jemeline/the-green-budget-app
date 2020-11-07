@@ -6,9 +6,10 @@ import Dashboard from '../components/Dashboard.component';
 import Admin from '../components/Admin.component';
 import About from '../components/About.component';
 import Contact from '../components/Contact.component';
-import PrivateRoute from './Private.route'
-import AdminRoute from './Admin.route'
-import PublicRoute from './Public.route'
+import PrivateRoute from './Private.route';
+import AdminRoute from './Admin.route';
+import PublicRoute from './Public.route';
+import Budget from '../components/Budget/Budget.component';
 
 const Routes = () => (
   <Switch>
@@ -18,6 +19,7 @@ const Routes = () => (
     <AdminRoute exact path="/admin" component={Admin} />
     <PublicRoute exact path="/about" component={About} />
     <PublicRoute exact path="/contact" component={Contact} />
+    <PrivateRoute exact path="/budget" component={Budget} />
   </Switch>
 );
 
