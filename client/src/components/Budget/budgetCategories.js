@@ -31,5 +31,5 @@ export const subcategories = [
     { id:7,parent:"Food",value: 'Groceries', label: 'Groceries' },
     { id:8,parent:"Food",value: 'Restaurants', label: 'Restaurants' },
     { id:9,parent:"Food",value: 'Pet Food', label: 'Pet Food' },
-    { id:10,parent:"Utilities",value: 'Electricity', label: 'Electricity' },
+    { id:10,parent:"Utilities",value: 'Electricity', label: 'Electricity'},
 ];

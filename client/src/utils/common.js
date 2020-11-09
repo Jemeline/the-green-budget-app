@@ -9,6 +9,9 @@ export function handleLoginUser(response){
     sessionStorage.setItem('name', response.data.data.firstname);
 };
 
+export function getName() {
+  return sessionStorage.getItem('name') || null;
+}
 export function getUser() {
     return sessionStorage.getItem('user') || null;
 }
@@ -56,3 +59,5 @@ export function generateRegisterUserPayload(state,token){
       }},
     }
 };
+
+
