@@ -12,7 +12,7 @@ module.exports = (req, res, next) => {
             const request_data = {  
                 expenseUser:req.body.expenseUser,
             };
-            db.all(`select * from expenses where email=?`, [request_data.expenseUser], (err, rows) => {
+            db.all(`select e.* from expenses e where email=? order by e.date desc`, [request_data.expenseUser], (err, rows) => {
                 if (err) {
                   res.status(400).json({"error":err.message});
                   console.log(err);

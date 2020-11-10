@@ -123,6 +123,7 @@ export const tableColumns = [
         name: "Date",
         options: {
           filter: false,
+          sort:true
         }
     },
     {
