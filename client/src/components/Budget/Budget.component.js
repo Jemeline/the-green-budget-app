@@ -216,6 +216,8 @@ class Budget extends Component {
     render() {
         const closeBtnExternal = <button className="close" onClick={this.toggle}></button>;
         const closeBtnInternal = <button style={{outline:'none'}} className="close" onClick={this.toggle} >&times;</button>;
+        const closeBtnExFilter = <button className="close" onClick={this.toggleFilter}></button>;
+        const closeBtnInFilter = <button style={{outline:'none'}} className="close" onClick={this.toggleFilter} >&times;</button>;
         const options = {
             filter:true,
             filterType: "dropdown",
@@ -262,8 +264,8 @@ class Budget extends Component {
             <div>
             <div>
             
-            <Modal isOpen={this.state.modalFilter} toggle={this.toggleFilter} close={closeBtn}>
-                <ModalHeader>Date Range Filter</ModalHeader>
+            <Modal isOpen={this.state.modalFilter} toggle={this.toggleFilter} close={closeBtnExFilter}>
+                <ModalHeader toggle={this.toggleFilter} close={closeBtnInFilter}>Date Range Filter</ModalHeader>
                 <ModalBody>
                     <Row>
                         <Col>
@@ -367,27 +369,27 @@ class Budget extends Component {
                     />  
                     </MuiThemeProvider>      
             </Container>
-            <Fab icon={<RefreshIcon/>} onClick={async () => {await this.renderBudget();}} mainButtonStyles={{backgroundColor: '#e74c3c',outline:'none'}} style={ButtonForm[this.state.buttonFormat].refresh}></Fab>
-                    <Fab icon={<AddIcon/>} onClick={this.toggle} mainButtonStyles={{backgroundColor: '#e74c3c',outline:'none'}} style={ButtonForm[this.state.buttonFormat].add}></Fab>
-                    <Fab icon={<SettingsIcon/>} mainButtonStyles={{backgroundColor: '#D3D3D3',outline:'none'}} style={ButtonForm[this.state.buttonFormat].drag}>
-                    <Action style={{backgroundColor: '#3498db',outline:'none', right:75,top:25}} onClick={() => { this.changeStyle(0) }}>
+            <Fab icon={<RefreshIcon/>} onClick={async () => {await this.renderBudget();}} mainButtonStyles={{backgroundColor: '#3f50b5',outline:'none'}} style={ButtonForm[this.state.buttonFormat].refresh}></Fab>
+                    <Fab icon={<AddIcon/>} onClick={this.toggle} mainButtonStyles={{backgroundColor: '#3f50b5',outline:'none'}} style={ButtonForm[this.state.buttonFormat].add}></Fab>
+                    <Fab icon={<SettingsIcon/>} mainButtonStyles={{backgroundColor: '#a9a9a9',outline:'none'}} style={ButtonForm[this.state.buttonFormat].drag}>
+                    <Action style={{backgroundColor: '#01579b',outline:'none', right:75,top:25}} onClick={() => { this.changeStyle(0) }}>
                     <MoreVertIcon/>
                     </Action>
-                    <Action style={{backgroundColor: '#3498db',outline:'none',right:100,top:25}} onClick={() => { this.changeStyle(2) }}>
+                    <Action style={{backgroundColor: '#01579b',outline:'none',right:100,top:25}} onClick={() => { this.changeStyle(2) }}>
                     <WidgetsIcon/>
                     </Action>
-                    <Action style={{backgroundColor: '#3498db',outline:'none',right:110,top:25}} onClick={() => { this.changeStyle(1)}}>
+                    <Action style={{backgroundColor: '#01579b',outline:'none',right:110,top:25}} onClick={() => { this.changeStyle(1)}}>
                     <MoreHorizIcon/>
                     </Action>
                     </Fab>
-                    <Fab icon={<FilterListIcon/>} mainButtonStyles={{backgroundColor: '#e74c3c',outline:'none'}} style={ButtonForm[this.state.buttonFormat].filter}>
-                        <Action style={{backgroundColor: '#3498db',outline:'none'}} onClick={this.toggleFilter}>
+                    <Fab icon={<FilterListIcon/>} mainButtonStyles={{backgroundColor: '#3f50b5',outline:'none'}} style={ButtonForm[this.state.buttonFormat].filter}>
+                        <Action style={{backgroundColor: '#01579b',outline:'none'}} onClick={this.toggleFilter}>
                         <DateRangeIcon/>
                         </Action>
-                        <Action style={{backgroundColor: '#3498db',outline:'none'}} onClick={async () => {await this.thisYear()}}>
+                        <Action style={{backgroundColor: '#01579b',outline:'none'}} onClick={async () => {await this.thisYear()}}>
                         Y
                         </Action>
-                        <Action style={{backgroundColor: '#3498db',outline:'none'}} onClick={async() => {await this.thisMonth()}}>
+                        <Action style={{backgroundColor: '#01579b',outline:'none'}} onClick={async() => {await this.thisMonth()}}>
                         M
                         </Action>
                     </Fab>   
