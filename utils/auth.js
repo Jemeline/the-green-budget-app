@@ -3,12 +3,12 @@ const sha256 = require('js-sha256');
 const { request } = require("express");
 
 function generateJWTToken(data) {
-    return jwt.sign(data, process.env.SECRET_KEY, { expiresIn: '5m' });
+    return jwt.sign(data, "vMJ1v1EoP4ohJEfLL75hpdX9K0TpSZJNy6Fh707c", { expiresIn: '5m' });
 }
 function verifyJWTToken(jwtToken) {
     let decoded = null
     try {
-        decoded = jwt.verify(jwtToken, process.env.SECRET_KEY);
+        decoded = jwt.verify(jwtToken, "vMJ1v1EoP4ohJEfLL75hpdX9K0TpSZJNy6Fh707c");
         return decoded;
     } catch(err) {
         return decoded
