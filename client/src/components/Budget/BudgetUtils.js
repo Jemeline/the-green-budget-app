@@ -11,6 +11,9 @@ export function shiftBudgetData(data){
     data.map(item => {
         item.push(item.shift()); 
         item.push(item.shift());
+        item[4]= "$"+item[4].toFixed(2).toString();
+
+
     });
 };
 
