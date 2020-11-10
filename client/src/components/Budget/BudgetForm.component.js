@@ -8,7 +8,7 @@ import {addBudgetItem,generateToken,getBudgetData,removeBudgetItem,updateBudgetI
 import MUIDataTable from "mui-datatables";
 import {Refresh as RefreshIcon,Add as AddIcon, FilterList as FilterListIcon,
         Cancel as CancelIcon,Settings as SettingsIcon, MoreHoriz as MoreHorizIcon,
-        MoreVert as MoreVertIcon, Widgets as WidgetsIcon, TransformRounded} from '@material-ui/icons';
+        MoreVert as MoreVertIcon, Widgets as WidgetsIcon, DateRange as DateRangeIcon} from '@material-ui/icons';
 import { Fab, Action } from 'react-tiny-fab';
 import 'react-tiny-fab/dist/styles.css';
 import {transformBudgetData, shiftBudgetData, tableTheme, ButtonForm, 
@@ -36,7 +36,11 @@ class BudgetForm extends Component {
             budgetId:0, 
             buttonFormat:2,
             newUser:false,
+            modalFilter:false,
+            startDate:'',
+            endDate:''
         }; 
+        this.toggleFilter = this.toggleFilter.bind(this);
         this.toggle = this.toggle.bind(this);  
         this.handleChange = this.handleChange.bind(this);    
     }
@@ -60,9 +64,43 @@ class BudgetForm extends Component {
         }
         
     };
+    toggleFilter() {
+        this.setState({modalFilter:!this.state.modalFilter});
+    };
+    async handleFilterSubmit() {
+        try{
+            this.onDismiss();
+            if (!this.state.startDate || !this.state.endDate){
+                this.handleAlert("Please Fill All Fields");
+            }else{
+                const startDate = new Date(this.state.startDate);
+                const endDate = new Date(this.state.endDate);
+                if (!regDate.test(this.state.startDate)){
+                    this.handleAlert("Invalid Start Date Format");
+                } else if (!regDate.test(this.state.endDate)){
+                    this.handleAlert("Invalid End Date Format"); 
+                }else if (startDate.getTime() > endDate.getTime()){
+                    this.handleAlert("Invalid Date Order Entered"); 
+                }else{
+                    await this.renderBudget();
+                    this.setState({
+                        budget:this.state.budget.filter(function(entry){
+                            const date = new Date(entry[0]);
+                            return date.getTime() >= startDate.getTime() && date.getTime() <= endDate.getTime();
+                        }
+                        )
+                    });
+                    this.toggleFilter();
+                }
+            }
+        }catch (error){
+            console.log(error);
+            this.handleAlert("Oops... Something Went Wrong");
+        }
+    };
     clearFormFields(){
         this.setState({description:'',amount:'',category:null,subcategories:subcategories,
-            subcategory:null,date:'',budgetId:0,
+            subcategory:null,date:'',budgetId:0,startDate:'',endDate:'' 
         });
     };
     handleCategory = category => {
@@ -123,10 +161,21 @@ class BudgetForm extends Component {
         }
     };
 
-
-    thisMonth(){
+    async thisYear(){
         const year = new Date().getFullYear();
         const month = new Date().getMonth()+1;
+        await this.renderBudget();
+        this.setState({
+            budget:this.state.budget.filter(entry=>
+                entry[0].slice(0,4)===year.toString()
+            )
+        });
+    };
+
+    async thisMonth(){
+        const year = new Date().getFullYear();
+        const month = new Date().getMonth()+1;
+        await this.renderBudget();
         this.setState({
             budget:this.state.budget.filter(entry=>
                 entry[0].slice(0,4)===year.toString()&& entry[0].slice(5,7)===month.toString()
@@ -136,7 +185,7 @@ class BudgetForm extends Component {
 
     // Table
     async renderBudget (){
-        this.setState({loading:'loading'});
+        this.clearFormFields();
         if (getUser()){
             const token = await generateToken(getUser());
             const payload = generateBudgetDataPayload(this.state,token);
@@ -160,7 +209,8 @@ class BudgetForm extends Component {
     };
     
     async componentDidMount(){
-       await this.renderBudget();
+        this.setState({loading:'loading'});
+        await this.renderBudget();
     };
    
     render() {
@@ -212,9 +262,46 @@ class BudgetForm extends Component {
         return (
             <div>
             <div>
-            <Button color="danger" onClick={() => {this.thisMonth()}}>This Month</Button>
             
-            
+            <Modal isOpen={this.state.modalFilter} toggle={this.toggleFilter} close={closeBtn}>
+                <ModalHeader>Date Range Filter</ModalHeader>
+                <ModalBody>
+                    <Row>
+                        <Col>
+                            <Alert color={this.state.alertColor} isOpen={this.state.alertOn} toggle={this.onDismiss}>
+                                {this.state.alertMessage}
+                            </Alert>
+                            <Form >
+                            <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                                <Label><strong>Start Date</strong></Label>
+                                <Input
+                                type="date"
+                                name="startDate"
+                                placeholder="start date placeholder"
+                                onChange={this.handleChange}
+                                value={this.state.startDate}
+                                />
+                            </FormGroup>
+                            <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                                <Label><strong>End Date</strong></Label>
+                                <Input
+                                type="date"
+                                name="endDate"
+                                placeholder="end date placeholder"
+                                onChange={this.handleChange}
+                                value={this.state.endDate}
+                                />
+                            </FormGroup>
+                            </Form>    
+                        </Col>
+                    </Row>
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="primary" onClick={async()=> await this.handleFilterSubmit()}>Apply</Button>{' '}
+                    <Button color="secondary" onClick={this.toggleFilter}>Cancel</Button>
+                </ModalFooter>
+            </Modal>
+
             <div>
             <Modal isOpen={this.state.modal} toggle={this.toggle} close={closeBtn}>
                 <ModalHeader>Budget Entry</ModalHeader>
@@ -271,6 +358,7 @@ class BudgetForm extends Component {
                 </ModalFooter>
             </Modal>
             </div>
+            <br></br>
             <Container fluid={true}>
             <MuiThemeProvider theme={tableTheme}> 
                     <MUIDataTable
@@ -286,25 +374,25 @@ class BudgetForm extends Component {
             <Fab icon={<RefreshIcon/>} onClick={async () => {await this.renderBudget();}} mainButtonStyles={{backgroundColor: '#e74c3c',outline:'none'}} style={ButtonForm[this.state.buttonFormat].refresh}></Fab>
                     <Fab icon={<AddIcon/>} onClick={this.toggle} mainButtonStyles={{backgroundColor: '#e74c3c',outline:'none'}} style={ButtonForm[this.state.buttonFormat].add}></Fab>
                     <Fab icon={<SettingsIcon/>} mainButtonStyles={{backgroundColor: '#D3D3D3',outline:'none'}} style={ButtonForm[this.state.buttonFormat].drag}>
-                    <Action text="Add Something" style={{backgroundColor: '#3498db',outline:'none', right:75,top:25}} onClick={() => { this.changeStyle(0) }}>
+                    <Action style={{backgroundColor: '#3498db',outline:'none', right:75,top:25}} onClick={() => { this.changeStyle(0) }}>
                     <MoreVertIcon/>
                     </Action>
-                    <Action text="Add Something" style={{backgroundColor: '#3498db',outline:'none',right:100,top:25}} onClick={() => { this.changeStyle(2) }}>
+                    <Action style={{backgroundColor: '#3498db',outline:'none',right:100,top:25}} onClick={() => { this.changeStyle(2) }}>
                     <WidgetsIcon/>
                     </Action>
-                    <Action text="Add Something" style={{backgroundColor: '#3498db',outline:'none',right:110,top:25}} onClick={() => { this.changeStyle(1)}}>
+                    <Action style={{backgroundColor: '#3498db',outline:'none',right:110,top:25}} onClick={() => { this.changeStyle(1)}}>
                     <MoreHorizIcon/>
                     </Action>
                     </Fab>
                     <Fab icon={<FilterListIcon/>} mainButtonStyles={{backgroundColor: '#e74c3c',outline:'none'}} style={ButtonForm[this.state.buttonFormat].filter}>
-                        <Action text="Add Something" style={{backgroundColor: '#3498db',outline:'none'}} onClick={() => alert('It works!')}>
-                        &plus;
+                        <Action style={{backgroundColor: '#3498db',outline:'none'}} onClick={this.toggleFilter}>
+                        <DateRangeIcon/>
                         </Action>
-                        <Action style={{backgroundColor: '#3498db',outline:'none'}} onClick={() => alert('It still works!')}>
-                        <SettingsIcon/>
+                        <Action style={{backgroundColor: '#3498db',outline:'none'}} onClick={async () => {await this.thisYear()}}>
+                        Y
                         </Action>
-                        <Action text="Assign Something" style={{backgroundColor: '#3498db',outline:'none'}} onClick={() => alert('It still works!')}>
-                        =
+                        <Action style={{backgroundColor: '#3498db',outline:'none'}} onClick={async() => {await this.thisMonth()}}>
+                        M
                         </Action>
                     </Fab>   
                     
