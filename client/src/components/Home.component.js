@@ -1,5 +1,5 @@
 import React, { Component} from 'react';
-import DraggableItem from './Budget/DraggableItem.component';
+import DraggableItem from './DraggableItem.component';
 
 class Home extends Component {
   render() {

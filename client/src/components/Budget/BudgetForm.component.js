@@ -18,7 +18,7 @@ import {MuiThemeProvider} from '@material-ui/core';
 import ReactLoading from 'react-loading';
 
   
-class BudgetForm extends Component {
+class Budget extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -35,14 +35,18 @@ class BudgetForm extends Component {
             loading:'true',
             budgetId:0, 
             buttonFormat:2,
+<<<<<<< HEAD
             newUser:false,
             modalFilter:false,
             startDate:'',
             endDate:''
+=======
+            newUser:false
+>>>>>>> main
         }; 
         this.toggleFilter = this.toggleFilter.bind(this);
         this.toggle = this.toggle.bind(this);  
-        this.handleChange = this.handleChange.bind(this);    
+        this.handleChange = this.handleChange.bind(this);
     }
     // Alert
     onDismiss = () => {this.setState({alertOn:false,alertMessage:'',alertColor:'danger',})};
@@ -185,7 +189,11 @@ class BudgetForm extends Component {
 
     // Table
     async renderBudget (){
+<<<<<<< HEAD
         this.clearFormFields();
+=======
+        // this.setState({loading:'loading'});
+>>>>>>> main
         if (getUser()){
             const token = await generateToken(getUser());
             const payload = generateBudgetDataPayload(this.state,token);
@@ -214,8 +222,8 @@ class BudgetForm extends Component {
     };
    
     render() {
-        const closeBtn = <button className="close" onClick={this.toggle}></button>;
-
+        const closeBtnExternal = <button className="close" onClick={this.toggle}></button>;
+        const closeBtnInternal = <button style={{outline:'none'}} className="close" onClick={this.toggle} >&times;</button>;
         const options = {
             filter:true,
             filterType: "dropdown",
@@ -230,19 +238,19 @@ class BudgetForm extends Component {
                 this.toggle();
                 this.setState({
                     description:row[3],
-                    amount:row[4],
+                    amount:parseFloat(row[4].slice(1)).toFixed(2),
                     category:categories.find(element => element.value===row[1]),
                     subcategory:subcategories.find(element => element.value===row[2]),
                     date:row[0],
                     budgetId:row[5],
-                    hiddenButtons:false
+                    hiddenButtons:false,
+                    subcategories:subcategories.filter(word => word.parent === row[1])
                 });
             },
             MuiTableRow: { hover: { '&$root': { '&:hover': { backgroundColor: 'green' }, } }, 
             }
             
         }
-        
         
         if (this.state.loading === 'loading') {
             return (
@@ -251,8 +259,7 @@ class BudgetForm extends Component {
                     <ReactLoading className="loading" type={"spinningBubbles"} color={"#002884"} height={'15%'} width={'15%'} />
                 </div>
         )};
-        if (this.state.loading === 'abort') {
-            
+        if (this.state.loading === 'abort') { 
             return (
                 <div>
                     <br></br>
@@ -262,6 +269,7 @@ class BudgetForm extends Component {
         return (
             <div>
             <div>
+<<<<<<< HEAD
             
             <Modal isOpen={this.state.modalFilter} toggle={this.toggleFilter} close={closeBtn}>
                 <ModalHeader>Date Range Filter</ModalHeader>
@@ -302,15 +310,16 @@ class BudgetForm extends Component {
                 </ModalFooter>
             </Modal>
 
+=======
+            <Button color="danger" onClick={() => {this.thisMonth()}}>This Month</Button>
+>>>>>>> main
             <div>
-            <Modal isOpen={this.state.modal} toggle={this.toggle} close={closeBtn}>
-                <ModalHeader>Budget Entry</ModalHeader>
+            <Modal isOpen={this.state.modal} toggle={this.toggle} close={closeBtnExternal}>
+                <ModalHeader toggle={this.toggle} close={closeBtnInternal}>Budget Entry</ModalHeader>
                 <ModalBody>
                     <Row>
                         <Col>
-                            <Alert color={this.state.alertColor} isOpen={this.state.alertOn} toggle={this.onDismiss}>
-                                                {this.state.alertMessage}
-                            </Alert>
+                            <Alert color={this.state.alertColor} isOpen={this.state.alertOn} toggle={this.onDismiss}>{this.state.alertMessage}</Alert>
                             <Form >
                             <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
                                 <Label><strong>Description</strong></Label>
@@ -354,7 +363,7 @@ class BudgetForm extends Component {
                 <Button outline color="info" hidden={!this.state.hiddenButtons} onClick={async () => {await this.handleSubmit('add');}}>Add</Button>{' '}
                 <Button outline color="info" hidden={this.state.hiddenButtons} onClick={async () => {await this.handleSubmit('update');}}>Update</Button>{' '}
                 <Button outline color="danger" hidden={this.state.hiddenButtons} onClick={async () => {await this.handleSubmit('delete');}}>Delete</Button>{' '}
-                <Button outline color="secondary" onClick={this.toggle}>Close</Button>
+                <Button outline color="secondary" onClick={this.toggle}>Cancel</Button>
                 </ModalFooter>
             </Modal>
             </div>
@@ -370,7 +379,6 @@ class BudgetForm extends Component {
                     />  
                     </MuiThemeProvider>      
             </Container>
-
             <Fab icon={<RefreshIcon/>} onClick={async () => {await this.renderBudget();}} mainButtonStyles={{backgroundColor: '#e74c3c',outline:'none'}} style={ButtonForm[this.state.buttonFormat].refresh}></Fab>
                     <Fab icon={<AddIcon/>} onClick={this.toggle} mainButtonStyles={{backgroundColor: '#e74c3c',outline:'none'}} style={ButtonForm[this.state.buttonFormat].add}></Fab>
                     <Fab icon={<SettingsIcon/>} mainButtonStyles={{backgroundColor: '#D3D3D3',outline:'none'}} style={ButtonForm[this.state.buttonFormat].drag}>
@@ -395,14 +403,10 @@ class BudgetForm extends Component {
                         M
                         </Action>
                     </Fab>   
-                    
-            
-            
             </div>
-            </div>
-            
+            </div>    
         );
     }
 };
  
-export default BudgetForm;
+export default Budget;
