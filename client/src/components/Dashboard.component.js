@@ -2,6 +2,7 @@ import React, {Component } from 'react';
 import '../css/Dashboard.css';
 import Widget from './Widget/Widget.js';
 import PieChart from './PieChart/PieChart.js';
+import {Link } from 'react-router-dom'
 
 
 
@@ -33,7 +34,7 @@ class Dashboard extends Component {
                 </div>
             </div>
             <div className="column right">
-                <Widget direction={'right'} text={'stocks'} />
+                <a href='./stocks' className='stocksButton right'><Widget  as={Link} to="/stocks" direction={'right'} text={'stocks'} /></a>
                 <Widget direction={'right'} text={'check my progress'}/>
                 <Widget direction={'right'} text={'impact'}/>
             </div>

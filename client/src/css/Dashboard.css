@@ -28,3 +28,10 @@
     margin-top: 50px;
 }
 
+.stocksButton {
+padding: 0;
+border: none;
+background: none;
+margin-right: 75%;
+}
+
