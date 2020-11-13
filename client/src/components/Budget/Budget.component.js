@@ -1,13 +1,13 @@
 import React, { Component} from 'react';
-import {Spinner,Alert,Button,Col,Row,Form,FormGroup,Container, Label, Input,Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
+import {Alert,Button,Col,Row,Form,FormGroup,Container, Label, Input,Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 import {categories,subcategories} from './budgetCategories';
 import Select from 'react-select';
 import {getUser,getName} from '../../utils/common';
-import '../../css/BudgetForm.css';
+import '../../css/Budget.css';
 import {addBudgetItem,generateToken,getBudgetData,removeBudgetItem,updateBudgetItem} from '../../utils/apiCalls';
 import MUIDataTable from "mui-datatables";
 import {Refresh as RefreshIcon,Add as AddIcon, FilterList as FilterListIcon,
-        Cancel as CancelIcon,Settings as SettingsIcon, MoreHoriz as MoreHorizIcon,
+        Settings as SettingsIcon, MoreHoriz as MoreHorizIcon,
         MoreVert as MoreVertIcon, Widgets as WidgetsIcon, DateRange as DateRangeIcon} from '@material-ui/icons';
 import { Fab, Action } from 'react-tiny-fab';
 import 'react-tiny-fab/dist/styles.css';
@@ -16,9 +16,16 @@ import {transformBudgetData, shiftBudgetData, tableTheme, ButtonForm,
         generateDeleteExpensePayload,generateBudgetDataPayload, tableColumns} from "./BudgetUtils.js";
 import {MuiThemeProvider} from '@material-ui/core';
 import ReactLoading from 'react-loading';
+import ShowChartIcon from '@material-ui/icons/ShowChart';
+import DonutLargeIcon from '@material-ui/icons/DonutLarge';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import {BudgetCharts} from './BudgetCharts.component';
+import {getChartData,getCategories,getYears} from '../Charts/ChartUtils';
+import {categories as categoryColors} from '../Budget/budgetCategories';
 
-  
 class Budget extends Component {
+    _isMounted = false;
     constructor(props){
         super(props);
         this.state = {
@@ -38,18 +45,25 @@ class Budget extends Component {
             newUser:false,
             modalFilter:false,
             startDate:'',
-            endDate:''
+            endDate:'',
+            formats:[],
+            doughnutData:{},
+            years:[],
+            year:{ value:2020,label:2020},
         }; 
         this.toggleFilter = this.toggleFilter.bind(this);
         this.toggle = this.toggle.bind(this);  
         this.handleChange = this.handleChange.bind(this);
     }
-    // Alert
+    
+    
+// Alert
     onDismiss = () => {this.setState({alertOn:false,alertMessage:'',alertColor:'danger',})};
     handleAlert(message,color){
         this.setState({ alertMessage:message,alertOn:true, alertColor:color || 'danger'});
     };
-    // Modal
+    
+//  Budget Modal
     handleChange(event) {
         this.setState({ [event.target.name]:event.target.value});
     };
@@ -61,41 +75,6 @@ class Budget extends Component {
             });
             this.clearFormFields();
             this.onDismiss();
-        }
-        
-    };
-    toggleFilter() {
-        this.setState({modalFilter:!this.state.modalFilter});
-    };
-    async handleFilterSubmit() {
-        try{
-            this.onDismiss();
-            if (!this.state.startDate || !this.state.endDate){
-                this.handleAlert("Please Fill All Fields");
-            }else{
-                const startDate = new Date(this.state.startDate);
-                const endDate = new Date(this.state.endDate);
-                if (!regDate.test(this.state.startDate)){
-                    this.handleAlert("Invalid Start Date Format");
-                } else if (!regDate.test(this.state.endDate)){
-                    this.handleAlert("Invalid End Date Format"); 
-                }else if (startDate.getTime() > endDate.getTime()){
-                    this.handleAlert("Invalid Date Order Entered"); 
-                }else{
-                    await this.renderBudget();
-                    this.setState({
-                        budget:this.state.budget.filter(function(entry){
-                            const date = new Date(entry[0]);
-                            return date.getTime() >= startDate.getTime() && date.getTime() <= endDate.getTime();
-                        }
-                        )
-                    });
-                    this.toggleFilter();
-                }
-            }
-        }catch (error){
-            console.log(error);
-            this.handleAlert("Oops... Something Went Wrong");
         }
     };
     clearFormFields(){
@@ -120,6 +99,8 @@ class Budget extends Component {
                 this.handleAlert("Invalid Date Format");
             } else if (!regAmount.test(this.state.amount)) {
                 this.handleAlert("Invalid Amount Format");
+            } else if (this.state.subcategory.parent !== this.state.category.value){
+                this.handleAlert("Invalid Subcategory");
             } else{
                 if (getUser()){
                     let data;
@@ -150,9 +131,9 @@ class Budget extends Component {
                             this.toggle();
                         };  
                     };
-                    await this.renderBudget();
+                    await this.renderBudgetTable();
                 } else {
-                      this.handleAlert("You Must Login First");
+                    this.props.history.push('/login');
                 }; 
             }  
           } catch (error){
@@ -160,11 +141,45 @@ class Budget extends Component {
             this.handleAlert("Oops... Something Went Wrong");
         }
     };
-
-    async thisYear(){
+    
+// Filter Modal
+    toggleFilter() {
+        this.setState({modalFilter:!this.state.modalFilter});
+    };
+    async handleFilterSubmit() {
+        try{
+            this.onDismiss();
+            if (!this.state.startDate || !this.state.endDate){
+                this.handleAlert("Please Fill All Fields");
+            } else if (!regDate.test(this.state.startDate)||!regDate.test(this.state.startDate)){
+                this.handleAlert("Invalid Date Format");
+            } else {
+                const startDate = new Date(this.state.startDate);
+                const endDate = new Date(this.state.endDate);
+                if (startDate.getTime() > endDate.getTime()){
+                    this.handleAlert("Invalid Date Order Entered"); 
+                }else{
+                    await this.renderBudgetTable();
+                    this.setState({
+                        budget:this.state.budget.filter(function(entry){
+                            const date = new Date(entry[0]);
+                            return date.getTime() >= startDate.getTime() && date.getTime() <= endDate.getTime();
+                        }
+                        )
+                    });
+                    this.toggleFilter();
+                }
+            }
+        }catch (error){
+            console.log(error);
+            this.handleAlert("Oops... Something Went Wrong");
+        }
+    };
+    
+    async filterThisYear(){
         const year = new Date().getFullYear();
         const month = new Date().getMonth()+1;
-        await this.renderBudget();
+        await this.renderBudgetTable();
         this.setState({
             budget:this.state.budget.filter(entry=>
                 entry[0].slice(0,4)===year.toString()
@@ -172,23 +187,24 @@ class Budget extends Component {
         });
     };
 
-    async thisMonth(){
+    async filterThisMonth(){
         const year = new Date().getFullYear();
         const month = new Date().getMonth()+1;
-        await this.renderBudget();
+        await this.renderBudgetTable();
         this.setState({
             budget:this.state.budget.filter(entry=>
                 entry[0].slice(0,4)===year.toString()&& entry[0].slice(5,7)===month.toString()
             )
         });
     };
-
-    // Table
-    async renderBudget (){
+    
+// Table
+    async renderBudgetTable (){
+        try {
         this.clearFormFields();
         if (getUser()){
             const token = await generateToken(getUser());
-            const payload = generateBudgetDataPayload(this.state,token);
+            const payload = generateBudgetDataPayload(token);
             const data = await getBudgetData(payload.body,payload.headers);
             const transformedData = transformBudgetData(data);
             shiftBudgetData(transformedData);
@@ -197,22 +213,156 @@ class Budget extends Component {
                 this.handleAlert("Welcome " +getName()+", add an entry to begin your journey with Green Financing.",'success');
             } else {
                 this.setState({ budget: transformedData, loading:'complete' });
-            }    
+            }
+            await this.renderDoughnut();
+            const years= await getYears(await getChartData());
+            years.map((year) => this.state.years.push({ value:year,label:year}));
+            const defaultYear = new Date().getFullYear();
+            await this.renderLine(defaultYear);
         } else {
-            this.setState({loading:'abort'});
+            this.props.history.push('/login');
         }
-    };
-
-    // FAB
+    }catch (error){
+        console.log(error);
+        this.setState({loading:"error"})
+    }
+    };  
+    
+// FAB
     changeStyle(style){
         this.setState({buttonFormat:style});
     };
-    
-    async componentDidMount(){
-        this.setState({loading:'loading'});
-        await this.renderBudget();
+// Toggle Button
+    handleFormat = (event, newFormats) => {
+        this.setState({formats:newFormats});
     };
-   
+    
+
+
+// Charts 
+    async renderDoughnut(){
+        try{
+            const defaultYear = new Date().getFullYear();
+            const data= await getChartData(defaultYear);
+            if (data){
+                const categories = getCategories(data);
+                const catCost =new Array(categories.length).fill(0);
+                data.map(function(ele){
+                    const ind = categories.indexOf(ele.category);
+                    catCost[ind]= catCost[ind] + ele.cost;
+                })
+                const x= catCost.map(function(ele){
+                    return ele.toFixed(2);
+                });
+                const backgroundColor = new Array();
+                const hoverBackgroundColor = new Array();
+                categories.map(function(cat){
+                    backgroundColor.push(categoryColors.filter(c => c.value === cat)[0].colorBorder);
+                    hoverBackgroundColor.push(categoryColors.filter(c => c.value === cat)[0].colorHover);
+                });
+                this.setState({doughnutData: {
+                    datasets: [
+                    {
+                    data: x,
+                    backgroundColor: backgroundColor,
+                        hoverBackgroundColor: hoverBackgroundColor
+                    }
+                ],
+                    labels: categories
+                }});
+                this.setState({loading:"complete"});
+
+
+            } else {
+                this.props.history.push('/login');
+            }
+        }catch (error){
+            this.setState({loading:'error'});
+            console.log(error);
+        }
+    };
+
+    async renderLine(year){
+        try{
+            const data = await getChartData(year);
+            if (data){
+                const monthCostArray = new Array(12).fill(null);
+                data.map(function(ele){
+                    const ind = ele.date.getMonth();
+                    monthCostArray[ind] = monthCostArray[ind] + ele.cost;
+                    if ((ind>0 || ind<monthCostArray.length-1) && !monthCostArray[ind+1]){
+                        monthCostArray[ind+1]=0
+                    };
+                    if ((ind>0 || ind<monthCostArray.length-1) && !monthCostArray[ind-1]){
+                        monthCostArray[ind-1]=0
+                    } ;  
+                });
+                const categories = getCategories(data);
+                const categoryMonth = Array(categories.length).fill(0).map(x => Array(12).fill(null));
+                const x = data.map(function(ele){
+                    const indCat = categories.indexOf(ele.category);
+                    const indMonth = ele.date.getMonth();
+                    categoryMonth[indCat][indMonth]= categoryMonth[indCat][indMonth] + ele.cost;
+                    if ((indMonth<categoryMonth[indCat].length-1) && !categoryMonth[indCat][indMonth+1]){
+                        categoryMonth[indCat][indMonth+1]=0
+                    };
+                    if ((indMonth<categoryMonth[indCat].length-1) && !categoryMonth[indCat][indMonth-1]){
+                        categoryMonth[indCat][indMonth-1]=0
+                    };
+                });
+                const datasets=new Array(categories.length);
+                let ind = 0;
+                categoryMonth.map(function(catGroup){
+                    datasets[ind]=
+                    {
+                        label: categories[ind],
+                        data: catGroup,
+                        fill: false,
+                        backgroundColor: categoryColors.filter(c => c.value === categories[ind])[0].color,
+                        borderColor: categoryColors.filter(c => c.value === categories[ind])[0].colorBorder,
+                        pointHoverBackgroundColor:categoryColors.filter(c => c.value === categories[ind])[0].color,
+                        pointHoverRadius:8,
+                        lineTension: 0.4,
+                        spanGaps:false
+                    };
+                    ind = ind+1;
+                });
+                datasets.push({
+                    label: "Total",
+                    data: monthCostArray,
+                    fill: false,
+                    backgroundColor: "rgba(75,192,192,0.2)",
+                    borderColor: "rgba(75,192,192,1)",
+                    lineTension: 0.4,
+                    spanGaps:false,
+                    pointHoverBackgroundColor:"rgba(75,192,192,0.2)",
+                    pointHoverRadius:8,
+                });
+                this.setState({ datasets:datasets, loading:"complete" });
+            } else {
+                this.setState({loading:'loading'});
+            }
+        } catch (error){
+            this.setState({loading:'error'});
+            console.log(error);
+        }
+    };
+
+// General
+    async componentDidMount(){
+        this._isMounted = true;
+        if (this._isMounted){
+            this.setState({formats:["line","donut"]})
+        };
+        this.setState({loading:'loading'});
+        await this.renderBudgetTable();
+
+        
+    };
+    componentWillUnmount() {
+        this._isMounted = false;
+    };
+
     render() {
         const closeBtnExternal = <button className="close" onClick={this.toggle}></button>;
         const closeBtnInternal = <button style={{outline:'none'}} className="close" onClick={this.toggle} >&times;</button>;
@@ -244,7 +394,16 @@ class Budget extends Component {
             MuiTableRow: { hover: { '&$root': { '&:hover': { backgroundColor: 'green' }, } }, 
             }
             
-        }
+        };
+        const toggleGroup = <ToggleButtonGroup orientation="vertical" style={{float:'left'}} value={this.state.formats} onChange={this.handleFormat} aria-label="text formatting">
+                            <ToggleButton style={{outline:'none'}} value="line" aria-label="bold">
+                                <ShowChartIcon />
+                            </ToggleButton>
+                            <ToggleButton style={{outline:'none'}} value="donut" aria-label="italic">
+                                <DonutLargeIcon />
+                            </ToggleButton>
+                        </ToggleButtonGroup>
+
         
         if (this.state.loading === 'loading') {
             return (
@@ -253,17 +412,20 @@ class Budget extends Component {
                     <ReactLoading className="loading" type={"spinningBubbles"} color={"#002884"} height={'15%'} width={'15%'} />
                 </div>
         )};
-        if (this.state.loading === 'abort') { 
+        if (this.state.loading === 'error') {
             return (
                 <div>
                     <br></br>
-                    <Alert color={"danger"}>Oops... Something Went Wrong</Alert>
+                    <ReactLoading className="loading" type={"spinningBubbles"} color={"#A62817"} height={'15%'} width={'15%'} />
                 </div>
         )};
+        
         return (
             <div>
             <div>
-            
+            {toggleGroup}
+            <BudgetCharts datasets={this.state.datasets} formats={this.state.formats} data={this.state.doughnutData}/>
+            <br></br>
             <Modal isOpen={this.state.modalFilter} toggle={this.toggleFilter} close={closeBtnExFilter}>
                 <ModalHeader toggle={this.toggleFilter} close={closeBtnInFilter}>Date Range Filter</ModalHeader>
                 <ModalBody>
@@ -357,7 +519,6 @@ class Budget extends Component {
                 </ModalFooter>
             </Modal>
             </div>
-            <br></br>
             <Container fluid={true}>
             <MuiThemeProvider theme={tableTheme}> 
                     <MUIDataTable
@@ -369,7 +530,7 @@ class Budget extends Component {
                     />  
                     </MuiThemeProvider>      
             </Container>
-            <Fab icon={<RefreshIcon/>} onClick={async () => {await this.renderBudget();}} mainButtonStyles={{backgroundColor: '#3f50b5',outline:'none'}} style={ButtonForm[this.state.buttonFormat].refresh}></Fab>
+            <Fab icon={<RefreshIcon/>} onClick={async () => {await this.renderBudgetTable();}} mainButtonStyles={{backgroundColor: '#3f50b5',outline:'none'}} style={ButtonForm[this.state.buttonFormat].refresh}></Fab>
                     <Fab icon={<AddIcon/>} onClick={this.toggle} mainButtonStyles={{backgroundColor: '#3f50b5',outline:'none'}} style={ButtonForm[this.state.buttonFormat].add}></Fab>
                     <Fab icon={<SettingsIcon/>} mainButtonStyles={{backgroundColor: '#a9a9a9',outline:'none'}} style={ButtonForm[this.state.buttonFormat].drag}>
                     <Action style={{backgroundColor: '#01579b',outline:'none', right:75,top:25}} onClick={() => { this.changeStyle(0) }}>
@@ -386,10 +547,10 @@ class Budget extends Component {
                         <Action style={{backgroundColor: '#01579b',outline:'none'}} onClick={this.toggleFilter}>
                         <DateRangeIcon/>
                         </Action>
-                        <Action style={{backgroundColor: '#01579b',outline:'none'}} onClick={async () => {await this.thisYear()}}>
+                        <Action style={{backgroundColor: '#01579b',outline:'none'}} onClick={async () => {await this.filterThisYear()}}>
                         Y
                         </Action>
-                        <Action style={{backgroundColor: '#01579b',outline:'none'}} onClick={async() => {await this.thisMonth()}}>
+                        <Action style={{backgroundColor: '#01579b',outline:'none'}} onClick={async() => {await this.filterThisMonth()}}>
                         M
                         </Action>
                     </Fab>   
