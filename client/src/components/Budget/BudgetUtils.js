@@ -35,10 +35,10 @@ export const regAmount =/^\$?([1-9]{1}[0-9]{0,2}(\,[0-9]{3})*(\.[0-9]{0,2})?|[1-
 
 export const ButtonForm = [
     {
-        filter:{bottom: 275,right:15},
-        refresh:{bottom: 200,right:15},
-        add:{bottom: 125,right:15},
-        drag:{bottom: 50,right:15}
+        filter:{top: 195,right:5},
+        refresh:{top: 135,right:5},
+        add:{top: 75,right:5},
+        drag:{top: 50,right:5}
     },
     {
         filter:{bottom: 50,right:15},

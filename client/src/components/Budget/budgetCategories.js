@@ -4,7 +4,7 @@ export const categories = [
     {id:3, value:"Utilities",label:"Utilities",color:'rgba(158, 42, 43,0.2)',colorBorder:'rgba(158, 42, 43,1)',colorHover:'rgba(158, 42, 43,0.7)'},
     {id:4, value:"Social",label:"Social",color:'rgba(84, 11, 14,0.2)',colorBorder:'rgba(84, 11, 14,1)',colorHover:'rgba(84, 11, 14,0.7)'},
     {id:5, value:"Clothing",label:"Clothing",color:'rgba(25, 114, 120,0.2)',colorBorder:'rgba(25, 114, 120,1)',colorHover:'rgba(25, 114, 120,0.7)'},
-    {id:6, value:"Medical",label:"Medical",color:'rgba(253, 226, 228,0.2)',colorBorder:'rgba(253, 226, 228,1)',colorHover:'rgba(253, 226, 228,0.7)'},
+    {id:6, value:"Medical",label:"Medical",color:'rgba(219,112,147,0.2)',colorBorder:'rgba(219,112,147,1)',colorHover:'rgba(219,112,147,0.7)'},
     {id:7, value:"Health",label:"Health",color:'rgba(165,102,131,0.2)',colorBorder:'rgba(165,102,131,1)',colorHover:'rgba(165,102,131,0.7)'},
     {id:8, value:"Beauty",label:"Beauty",color:'rgba(238,146,90,0.2)',colorBorder:'rgba(238,146,90,1)',colorHover:'rgba(238,146,90,0.7)'},
     {id:9, value:"Insurance",label:"Insurance",color:'rgba(160,186,209,0.2)',colorBorder:'rgba(160,186,209,1)',colorHover:'rgba(160,186,209,0.7)'},
@@ -70,4 +70,21 @@ export const subcategories = [
     { id:41,parent:"Medical",value: 'Procedures', label: 'Procedures'},
     { id:42,parent:"Medical",value: 'Other', label: 'Other'},
         
+];
+export const monthLabels=["January","February","March","April","May","June","July", "August","September","October","November","December"];
+export const monthNames = [
+    {id:0, value:"January", label:"January", days:31 },
+    {id:1, value:"February", label:"February", days:28},
+    {id:2, value:"March", label:"March", days:31},
+    {id:3, value:"April", label:"April", days:30},
+    {id:4, value:"May", label:"May", days:31},
+    {id:5, value:"June", label:"June", days:30},
+    {id:6, value:"July", label:"July", days:31},
+    {id:7, value:"August", label:"August", days:31},
+    {id:8, value:"September", label:"September", days:30},
+    {id:9, value:"October", label:"October", days:31},
+    {id:10, value:"November", label:"November", days:30},
+    {id:11, value:"December", label:"December", days:31},
+    {id:12, value:"All", label:"All", days:0}
+
 ];
