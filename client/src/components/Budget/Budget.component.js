@@ -1,6 +1,11 @@
 import React, { Component} from 'react';
+<<<<<<< HEAD
 import {Alert,Button,Col,Row,Container,Form,FormGroup, Label, Input,Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 import {categories,subcategories} from './budgetCategories';
+=======
+import {Alert,Button,Col,Row,Form,FormGroup,Container, Label, Input,Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
+import {categories,subcategories,monthNames, monthLabels} from './budgetCategories';
+>>>>>>> origin/filter-budget-charts
 import Select from 'react-select';
 import {getUser,getName} from '../../utils/common';
 import '../../css/Budget.css';
@@ -41,22 +46,33 @@ class Budget extends Component {
             alertColor:'danger',
             loading:'true',
             budgetId:0, 
-            buttonFormat:2,
+            buttonFormat:0,
             newUser:false,
+            modalYearFilter:false,
+            modalMonthFilter:false,
             modalFilter:false,
             startDate:'',
             endDate:'',
             formats:[],
             doughnutData:{},
             years:[],
-            year:{ value:2020,label:2020},
+            year:{value:new Date().getFullYear(),label:new Date().getFullYear()},
+            defaultYear:{value:new Date().getFullYear(),label:new Date().getFullYear()},
+            months:monthNames,
+            month: {id:12, value:"All", label:"All", days:0},
+            defaultMonth: {id:12, value:"All", label:"All", days:0},
+            lineLabels:monthLabels,
+            defaultLineLabels:monthLabels,
+            tempMonth: {id:12, value:"All", label:"All", days:0}
         }; 
+        this.toggleMonthFilter = this.toggleMonthFilter.bind(this);
+        this.toggleYearFilter = this.toggleYearFilter.bind(this);
         this.toggleFilter = this.toggleFilter.bind(this);
         this.toggle = this.toggle.bind(this);  
         this.handleChange = this.handleChange.bind(this);
     }
     
-    
+
 // Alert
     onDismiss = () => {this.setState({alertOn:false,alertMessage:'',alertColor:'danger',})};
     handleAlert(message,color){
@@ -79,7 +95,7 @@ class Budget extends Component {
     };
     clearFormFields(){
         this.setState({description:'',amount:'',category:null,subcategories:subcategories,
-            subcategory:null,date:'',budgetId:0,startDate:'',endDate:'' 
+            subcategory:null,date:'',budgetId:0,startDate:'',endDate:'',years:[],
         });
     };
     handleCategory = category => {
@@ -89,6 +105,12 @@ class Budget extends Component {
     };
     handleSubcategory = subcategory => {
         this.setState({subcategory:subcategory});
+    };
+    handleYearSelect = async select => {
+        this.setState({year:select});
+    };
+    handleMonthSelect = select => {
+        this.setState({tempMonth:select});
     };
     async handleSubmit(type){
         try{
@@ -146,6 +168,46 @@ class Budget extends Component {
     toggleFilter() {
         this.setState({modalFilter:!this.state.modalFilter});
     };
+    toggleYearFilter() {
+        this.setState({modalYearFilter:!this.state.modalYearFilter});
+    };
+    toggleMonthFilter() {
+        this.setState({modalMonthFilter:!this.state.modalMonthFilter});
+    };
+    async handleYearFilterSubmit() {
+        try{
+            this.onDismiss();
+            if (!this.state.year){
+                this.handleAlert("Please Fill All Fields");
+            }else {
+                this.setState({month:this.state.defaultMonth});
+                this.setState({lineLabels:this.state.defaultLineLabels});
+                console.log(this.state);
+                this.toggleYearFilter();
+                await this.renderBudgetTable();
+                await this.filterThisYear();
+            }
+        }catch (error){
+            console.log(error);
+            this.handleAlert("Oops... Something Went Wrong");
+        }
+    };
+    async handleMonthFilterSubmit() {
+        try{
+            this.onDismiss();
+            if (!this.state.year || !this.state.month){
+                this.handleAlert("Please Fill All Fields");
+            }else {
+                this.setState({month:this.state.tempMonth,tempMonth:this.state.defaultMonth})
+                this.toggleMonthFilter();
+                await this.renderBudgetTable();
+                await this.filterThisMonth();
+            }
+        }catch (error){
+            console.log(error);
+            this.handleAlert("Oops... Something Went Wrong");
+        }
+    };
     async handleFilterSubmit() {
         try{
             this.onDismiss();
@@ -177,54 +239,47 @@ class Budget extends Component {
     };
     
     async filterThisYear(){
-        const year = new Date().getFullYear();
-        const month = new Date().getMonth()+1;
-        await this.renderBudgetTable();
         this.setState({
             budget:this.state.budget.filter(entry=>
-                entry[0].slice(0,4)===year.toString()
+                entry[0].slice(0,4)===this.state.year.value.toString()
             )
         });
     };
-
     async filterThisMonth(){
-        const year = new Date().getFullYear();
-        const month = new Date().getMonth()+1;
-        await this.renderBudgetTable();
         this.setState({
             budget:this.state.budget.filter(entry=>
-                entry[0].slice(0,4)===year.toString()&& entry[0].slice(5,7)===month.toString()
+                entry[0].slice(0,4)===this.state.year.value.toString() && parseInt(entry[0].slice(5,7))===(this.state.month.id+1)
             )
         });
     };
     
 // Table
     async renderBudgetTable (){
-        try {
         this.clearFormFields();
-        if (getUser()){
-            const token = await generateToken(getUser());
-            const payload = generateBudgetDataPayload(token);
-            const data = await getBudgetData(payload.body,payload.headers);
-            const transformedData = transformBudgetData(data);
-            shiftBudgetData(transformedData);
-            if (transformedData.length === 0){
-                this.setState({ budget: transformedData, loading:'complete',modal:true,newUser:true, hiddenButtons:true });
-                this.handleAlert("Welcome " +getName()+", add an entry to begin your journey with Green Financing.",'success');
+        try {
+            if (getUser()){
+                const token = await generateToken(getUser());
+                const payload = generateBudgetDataPayload(token);
+                const data = await getBudgetData(payload.body,payload.headers);
+                const transformedData = transformBudgetData(data);
+                const transformDate= transformedData.map(function(item){return {date:new Date(item[2]),category:item[3],cost:item[6]}});
+                const years= getYears(transformDate);
+                shiftBudgetData(transformedData);
+                if (transformedData.length === 0){
+                    this.setState({ budget: transformedData, loading:'complete',modal:true,newUser:true, hiddenButtons:true });
+                    this.handleAlert("Welcome " +getName()+", add an entry to begin your journey with Green Financing.",'success');
+                } else {
+                    this.setState({ budget: transformedData, loading:'complete' });
+                }
+                years.map((year) => this.state.years.push({ value:year,label:year}));
+                await this.renderDoughnut(this.state.year.value,this.state.month.id);
+                await this.renderLine(this.state.year.value,this.state.month.id);
             } else {
-                this.setState({ budget: transformedData, loading:'complete' });
+                this.props.history.push('/login');
             }
-            await this.renderDoughnut();
-            const years= await getYears(await getChartData());
-            years.map((year) => this.state.years.push({ value:year,label:year}));
-            const defaultYear = new Date().getFullYear();
-            await this.renderLine(defaultYear);
-        } else {
-            this.props.history.push('/login');
-        }
-    }catch (error){
-        console.log(error);
-        this.setState({loading:"error"})
+        }catch (error){
+            console.log(error);
+            this.setState({loading:"error"})
     }
     };  
     
@@ -236,14 +291,11 @@ class Budget extends Component {
     handleFormat = (event, newFormats) => {
         this.setState({formats:newFormats});
     };
-    
-
 
 // Charts 
-    async renderDoughnut(){
+    async renderDoughnut(year, month){
         try{
-            const defaultYear = new Date().getFullYear();
-            const data= await getChartData(defaultYear);
+            const data = await getChartData(year, month);
             if (data){
                 const categories = getCategories(data);
                 const catCost =new Array(categories.length).fill(0);
@@ -271,8 +323,6 @@ class Budget extends Component {
                     labels: categories
                 }});
                 this.setState({loading:"complete"});
-
-
             } else {
                 this.props.history.push('/login');
             }
@@ -282,63 +332,120 @@ class Budget extends Component {
         }
     };
 
-    async renderLine(year){
+    async renderLine(year, month){
         try{
-            const data = await getChartData(year);
+            const data = await getChartData(year, month);
             if (data){
-                const monthCostArray = new Array(12).fill(null);
-                data.map(function(ele){
-                    const ind = ele.date.getMonth();
-                    monthCostArray[ind] = monthCostArray[ind] + ele.cost;
-                    if ((ind>0 || ind<monthCostArray.length-1) && !monthCostArray[ind+1]){
-                        monthCostArray[ind+1]=0
-                    };
-                    if ((ind>0 || ind<monthCostArray.length-1) && !monthCostArray[ind-1]){
-                        monthCostArray[ind-1]=0
-                    } ;  
-                });
-                const categories = getCategories(data);
-                const categoryMonth = Array(categories.length).fill(0).map(x => Array(12).fill(null));
-                const x = data.map(function(ele){
-                    const indCat = categories.indexOf(ele.category);
-                    const indMonth = ele.date.getMonth();
-                    categoryMonth[indCat][indMonth]= categoryMonth[indCat][indMonth] + ele.cost;
-                    if ((indMonth<categoryMonth[indCat].length-1) && !categoryMonth[indCat][indMonth+1]){
-                        categoryMonth[indCat][indMonth+1]=0
-                    };
-                    if ((indMonth<categoryMonth[indCat].length-1) && !categoryMonth[indCat][indMonth-1]){
-                        categoryMonth[indCat][indMonth-1]=0
-                    };
-                });
-                const datasets=new Array(categories.length);
-                let ind = 0;
-                categoryMonth.map(function(catGroup){
-                    datasets[ind]=
-                    {
-                        label: categories[ind],
-                        data: catGroup,
+                if (month === 12){
+                    const monthCostArray = new Array(12).fill(null);
+                    data.map(function(ele){
+                        const ind = ele.date.getMonth();
+                        monthCostArray[ind] = monthCostArray[ind] + ele.cost;
+                        if ((ind>0 || ind<monthCostArray.length-1) && !monthCostArray[ind+1]){
+                            monthCostArray[ind+1]=0
+                        };
+                        if ((ind>0 || ind<monthCostArray.length-1) && !monthCostArray[ind-1]){
+                            monthCostArray[ind-1]=0
+                        } ;  
+                    });
+                    const categories = getCategories(data);
+                    const categoryMonth = Array(categories.length).fill(0).map(x => Array(12).fill(null));
+                    const x = data.map(function(ele){
+                        const indCat = categories.indexOf(ele.category);
+                        const indMonth = ele.date.getMonth();
+                        categoryMonth[indCat][indMonth]= categoryMonth[indCat][indMonth] + ele.cost;
+                        if ((indMonth<categoryMonth[indCat].length-1) && !categoryMonth[indCat][indMonth+1]){
+                            categoryMonth[indCat][indMonth+1]=0
+                        };
+                        if ((indMonth<categoryMonth[indCat].length-1) && !categoryMonth[indCat][indMonth-1]){
+                            categoryMonth[indCat][indMonth-1]=0
+                        };
+                    });
+                    const datasets=new Array(categories.length);
+                    let ind = 0;
+                    categoryMonth.map(function(catGroup){
+                        datasets[ind]=
+                        {
+                            label: categories[ind],
+                            data: catGroup,
+                            fill: false,
+                            backgroundColor: categoryColors.filter(c => c.value === categories[ind])[0].color,
+                            borderColor: categoryColors.filter(c => c.value === categories[ind])[0].colorBorder,
+                            pointHoverBackgroundColor:categoryColors.filter(c => c.value === categories[ind])[0].color,
+                            pointHoverRadius:8,
+                            lineTension: 0.4,
+                            spanGaps:false
+                        };
+                        ind = ind+1;
+                    });
+                    datasets.push({
+                        label: "Total",
+                        data: monthCostArray,
                         fill: false,
-                        backgroundColor: categoryColors.filter(c => c.value === categories[ind])[0].color,
-                        borderColor: categoryColors.filter(c => c.value === categories[ind])[0].colorBorder,
-                        pointHoverBackgroundColor:categoryColors.filter(c => c.value === categories[ind])[0].color,
-                        pointHoverRadius:8,
+                        backgroundColor: "rgba(75,192,192,0.2)",
+                        borderColor: "rgba(75,192,192,1)",
                         lineTension: 0.4,
-                        spanGaps:false
-                    };
-                    ind = ind+1;
-                });
-                datasets.push({
-                    label: "Total",
-                    data: monthCostArray,
-                    fill: false,
-                    backgroundColor: "rgba(75,192,192,0.2)",
-                    borderColor: "rgba(75,192,192,1)",
-                    lineTension: 0.4,
-                    spanGaps:false,
-                    pointHoverBackgroundColor:"rgba(75,192,192,0.2)",
-                    pointHoverRadius:8,
-                });
-                this.setState({ datasets:datasets, loading:"complete" });
+                        spanGaps:false,
+                        pointHoverBackgroundColor:"rgba(75,192,192,0.2)",
+                        pointHoverRadius:8,
+                    });
+                    this.setState({ datasets:datasets, loading:"complete" });
+                }else {
+                    const dayCostArray = new Array(this.state.month.days).fill(null);
+                    data.map(function(ele){
+                        const ind = ele.date.getDate();
+                        dayCostArray[ind] = dayCostArray[ind] + ele.cost;
+                        if ((ind>0 || ind<dayCostArray.length-1) && !dayCostArray[ind+1]){
+                            dayCostArray[ind+1]=0
+                        };
+                        if ((ind>0 || ind<dayCostArray.length-1) && !dayCostArray[ind-1]){
+                            dayCostArray[ind-1]=0
+                        } ;  
+                    });
+                    const categories = getCategories(data);
+                    const categoryDay = Array(categories.length).fill(0).map(x => Array(this.state.month.days).fill(null));
+                    const x = data.map(function(ele){
+                        const indCat = categories.indexOf(ele.category);
+                        const indDay = ele.date.getDate();
+                        categoryDay[indCat][indDay]= categoryDay[indCat][indDay] + ele.cost;
+                        if ((indDay<categoryDay[indCat].length-1) && !categoryDay[indCat][indDay+1]){
+                            categoryDay[indCat][indDay+1]=0
+                        };
+                        if ((indDay<categoryDay[indCat].length-1) && !categoryDay[indCat][indDay-1]){
+                            categoryDay[indCat][indDay-1]=0
+                        };
+                    });
+                    const datasets=new Array(categories.length);
+                    let ind = 0;
+                    categoryDay.map(function(catGroup){
+                        datasets[ind]=
+                        {
+                            label: categories[ind],
+                            data: catGroup,
+                            fill: false,
+                            backgroundColor: categoryColors.filter(c => c.value === categories[ind])[0].color,
+                            borderColor: categoryColors.filter(c => c.value === categories[ind])[0].colorBorder,
+                            pointHoverBackgroundColor:categoryColors.filter(c => c.value === categories[ind])[0].color,
+                            pointHoverRadius:8,
+                            lineTension: 0.4,
+                            spanGaps:false
+                        };
+                        ind = ind+1;
+                    });
+                    datasets.push({
+                        label: "Total",
+                        data: dayCostArray,
+                        fill: false,
+                        backgroundColor: "rgba(75,192,192,0.2)",
+                        borderColor: "rgba(75,192,192,1)",
+                        lineTension: 0.4,
+                        spanGaps:false,
+                        pointHoverBackgroundColor:"rgba(75,192,192,0.2)",
+                        pointHoverRadius:8,
+                    });
+                    this.setState({lineLabels: Array.from({length: this.state.month.days}, (_, i) => i + 1)});
+                    this.setState({ datasets:datasets, loading:"complete" });
+                }
             } else {
                 this.setState({loading:'loading'});
             }
@@ -355,9 +462,7 @@ class Budget extends Component {
             this.setState({formats:["line","donut"]})
         };
         this.setState({loading:'loading'});
-        await this.renderBudgetTable();
-
-        
+        await this.renderBudgetTable();      
     };
     componentWillUnmount() {
         this._isMounted = false;
@@ -368,6 +473,10 @@ class Budget extends Component {
         const closeBtnInternal = <button style={{outline:'none'}} className="close" onClick={this.toggle} >&times;</button>;
         const closeBtnExFilter = <button className="close" onClick={this.toggleFilter}></button>;
         const closeBtnInFilter = <button style={{outline:'none'}} className="close" onClick={this.toggleFilter} >&times;</button>;
+        const closeBtnExYearFilter = <button className="close" onClick={this.toggleYearFilter}></button>;
+        const closeBtnInYearFilter = <button style={{outline:'none'}} className="close" onClick={this.toggleYearFilter} >&times;</button>;
+        const closeBtnExMonthFilter = <button className="close" onClick={this.toggleMonthFilter}></button>;
+        const closeBtnInMonthFilter = <button style={{outline:'none'}} className="close" onClick={this.toggleMonthFilter} >&times;</button>;
         const options = {
             filter:true,
             filterType: "dropdown",
@@ -393,7 +502,6 @@ class Budget extends Component {
             },
             MuiTableRow: { hover: { '&$root': { '&:hover': { backgroundColor: 'green' }, } }, 
             }
-            
         };
         const toggleGroup = <ToggleButtonGroup orientation="vertical" style={{float:'left'}} value={this.state.formats} onChange={this.handleFormat} aria-label="text formatting">
                             <ToggleButton style={{outline:'none'}} value="line" aria-label="bold">
@@ -403,8 +511,6 @@ class Budget extends Component {
                                 <DonutLargeIcon />
                             </ToggleButton>
                         </ToggleButtonGroup>
-
-        
         if (this.state.loading === 'loading') {
             return (
                 <div>
@@ -419,13 +525,74 @@ class Budget extends Component {
                     <ReactLoading className="loading" type={"spinningBubbles"} color={"#A62817"} height={'15%'} width={'15%'} />
                 </div>
         )};
-        
         return (
             <div>
             <div>
             {toggleGroup}
-            <BudgetCharts datasets={this.state.datasets} formats={this.state.formats} data={this.state.doughnutData}/>
-            <br></br>
+            <BudgetCharts datasets={this.state.datasets} lineLabels={this.state.lineLabels} formats={this.state.formats} data={this.state.doughnutData} year={this.state.year} month={this.state.month}/>
+            <br></br>  
+            <Modal isOpen={this.state.modalYearFilter} toggle={this.toggleYearFilter} close={closeBtnExYearFilter}>
+                <ModalHeader toggle={this.toggleYearFilter} close={closeBtnInYearFilter}>Year Filter</ModalHeader>
+                <ModalBody>
+                    <Row>
+                        <Col>
+                            <Alert color={this.state.alertColor} isOpen={this.state.alertOn} toggle={this.onDismiss}>
+                                {this.state.alertMessage}
+                            </Alert>
+                            <Form >
+                            <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                                <Label ><strong>Year</strong></Label>
+                                <Select
+                                    value={this.state.year}
+                                    onChange={this.handleYearSelect}
+                                    options={this.state.years}
+                                />   
+                            </FormGroup>
+                            </Form>    
+                        </Col>
+                    </Row>
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="primary" onClick={async()=> await this.handleYearFilterSubmit()}>Apply</Button>{' '}
+                    <Button color="secondary" onClick={this.toggleYearFilter}>Cancel</Button>
+                </ModalFooter>
+            </Modal>
+
+            <Modal isOpen={this.state.modalMonthFilter} toggle={this.toggleMonthFilter} close={closeBtnExMonthFilter}>
+                <ModalHeader toggle={this.toggleMonthFilter} close={closeBtnInMonthFilter}>Month Filter</ModalHeader>
+                <ModalBody>
+                    <Row>
+                        <Col>
+                            <Alert color={this.state.alertColor} isOpen={this.state.alertOn} toggle={this.onDismiss}>
+                                {this.state.alertMessage}
+                            </Alert>
+                            <Form >
+                            <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                                <Label ><strong>Year</strong></Label>
+                                <Select
+                                    value={this.state.year}
+                                    onChange={this.handleYearSelect}
+                                    options={this.state.years}
+                                />   
+                            </FormGroup>
+                            <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                                <Label ><strong>Month</strong></Label>
+                                <Select
+                                    value={this.state.tempMonth}
+                                    onChange={this.handleMonthSelect}
+                                    options={this.state.months}
+                                />   
+                            </FormGroup>
+                            </Form>    
+                        </Col>
+                    </Row>
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="primary" onClick={async()=> await this.handleMonthFilterSubmit()}>Apply</Button>{' '}
+                    <Button color="secondary" onClick={this.toggleMonthFilter}>Cancel</Button>
+                </ModalFooter>
+            </Modal>
+
             <Modal isOpen={this.state.modalFilter} toggle={this.toggleFilter} close={closeBtnExFilter}>
                 <ModalHeader toggle={this.toggleFilter} close={closeBtnInFilter}>Date Range Filter</ModalHeader>
                 <ModalBody>
@@ -530,27 +697,16 @@ class Budget extends Component {
                     />  
                     </MuiThemeProvider>      
             </Container>
-            <Fab icon={<RefreshIcon/>} onClick={async () => {await this.renderBudgetTable();}} mainButtonStyles={{backgroundColor: '#3f50b5',outline:'none'}} style={ButtonForm[this.state.buttonFormat].refresh}></Fab>
+                    <Fab icon={<RefreshIcon/>} onClick={async () => {this.setState({year: this.state.defaultYear, month:this.state.defaultMonth, lineLabels:this.state.defaultLineLabels}); await this.renderBudgetTable();}} mainButtonStyles={{backgroundColor: '#3f50b5',outline:'none'}} style={ButtonForm[this.state.buttonFormat].refresh}></Fab>
                     <Fab icon={<AddIcon/>} onClick={this.toggle} mainButtonStyles={{backgroundColor: '#3f50b5',outline:'none'}} style={ButtonForm[this.state.buttonFormat].add}></Fab>
-                    <Fab icon={<SettingsIcon/>} mainButtonStyles={{backgroundColor: '#a9a9a9',outline:'none'}} style={ButtonForm[this.state.buttonFormat].drag}>
-                    <Action style={{backgroundColor: '#01579b',outline:'none', right:75,top:25}} onClick={() => { this.changeStyle(0) }}>
-                    <MoreVertIcon/>
-                    </Action>
-                    <Action style={{backgroundColor: '#01579b',outline:'none',right:100,top:25}} onClick={() => { this.changeStyle(2) }}>
-                    <WidgetsIcon/>
-                    </Action>
-                    <Action style={{backgroundColor: '#01579b',outline:'none',right:110,top:25}} onClick={() => { this.changeStyle(1)}}>
-                    <MoreHorizIcon/>
-                    </Action>
-                    </Fab>
                     <Fab icon={<FilterListIcon/>} mainButtonStyles={{backgroundColor: '#3f50b5',outline:'none'}} style={ButtonForm[this.state.buttonFormat].filter}>
                         <Action style={{backgroundColor: '#01579b',outline:'none'}} onClick={this.toggleFilter}>
                         <DateRangeIcon/>
                         </Action>
-                        <Action style={{backgroundColor: '#01579b',outline:'none'}} onClick={async () => {await this.filterThisYear()}}>
+                        <Action style={{backgroundColor: '#01579b',outline:'none'}} onClick={this.toggleYearFilter}>
                         Y
                         </Action>
-                        <Action style={{backgroundColor: '#01579b',outline:'none'}} onClick={async() => {await this.filterThisMonth()}}>
+                        <Action style={{backgroundColor: '#01579b',outline:'none'}} onClick={this.toggleMonthFilter}>
                         M
                         </Action>
                     </Fab>   

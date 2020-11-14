@@ -2,7 +2,7 @@ import {generateToken,getBudgetData} from '../../utils/apiCalls';
 import {transformBudgetData, shiftBudgetData,generateBudgetDataPayload} from "../Budget/BudgetUtils.js";
 import {getUser} from '../../utils/common';
 
-export async function getChartData(year){
+export async function getChartData(year, month){
     try {
         if(getUser()){
             const token = await generateToken(getUser());
@@ -10,15 +10,18 @@ export async function getChartData(year){
             const data = await getBudgetData(payload.body,payload.headers);
             const transformedData = transformBudgetData(data);
             const transformDate= transformedData.map(function(item){return {date:new Date(item[2]),category:item[3],cost:item[6]}});
-            if (year){
-                const filteredByYear = transformDate.filter(function(ele){
-                    console.log(ele.date.getFullYear())
-                    return ele.date.getFullYear()===year;
-                });
-                return filteredByYear;
-            }else {
-                return transformDate;
-            }    
+            const filteredByYear = transformDate.filter(function(ele){
+                console.log(ele.date.getFullYear())
+                return ele.date.getFullYear()===year;
+            });
+
+            if (month == 12) return filteredByYear;
+            else {
+                const filteredByMonth = filteredByYear.filter(function(ele){
+                    return ele.date.getMonth()===month;
+                })
+                return filteredByMonth;
+            }
         } else {
             return null;    
         }
@@ -44,13 +47,14 @@ export function getCategories(data){
     return categories;
 };
 
-export async function getYears(data){
-    const years = []
+export function getYears(data){
+    const years = [];
+    console.log(data);
     const temp = data.map(function(ele){
         const y = ele.date.getFullYear();
         if (!years.includes(y)){
             years.push(y);
         }
     });
-    return await years;
+    return years;
 };

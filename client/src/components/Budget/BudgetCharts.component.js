@@ -12,9 +12,15 @@ import Container from '@material-ui/core/Container';
 
 
 export const BudgetCharts = (props) => {
-    const monthNames = ["January","February","March","April","May","June","July", "August","September","October","November","December"];
+        let month = "";
+        let axis="Month";
+        if (props.month.id !== 12){
+            month=props.month.value;
+            axis="Day"
+        }
+        const title = month + " "+ props.year.value +' Spending By Category';
         const data = {
-            labels: monthNames,
+            labels: props.lineLabels,
             datasets: props.datasets
         };
         if (props.formats.length>1){
@@ -26,9 +32,29 @@ export const BudgetCharts = (props) => {
                         <Col xl="6"> 
                         <Line data={data} options={{responsive:true,title:{
                         display:true,
-                        text:'Monthly Spending By Category',
+                        text:title,
                         fontSize:20
-                        }
+                        },
+                        scales: {
+                            yAxes: [{
+                              scaleLabel: {
+                                display: true,
+                                labelString: 'Amount ($)',
+                                
+                              },
+                              gridLines: {
+                              },
+                            }],
+                            xAxes: [{
+                              scaleLabel: {
+                                display: true,
+                                labelString: axis
+                              },
+                              gridLines: {
+                                display: false,
+                              },
+                            }],
+                        }    
                         
                     }}/>
                         </Col>
@@ -42,7 +68,7 @@ export const BudgetCharts = (props) => {
                             maintainAspectRatio: true,
                             title:{
                                 display:true,
-                                text:'Monthly Spending By Category',
+                                text:title ,
                                 fontSize:20
                             },
                             
@@ -68,7 +94,7 @@ export const BudgetCharts = (props) => {
                             maintainAspectRatio: true,
                             title:{
                                 display:true,
-                                text:'Monthly Spending By Category',
+                                text:title,
                                 fontSize:20
                             },
                             
@@ -82,11 +108,31 @@ export const BudgetCharts = (props) => {
                 <div>
                     <br></br>
                     <Container > 
-                        <Line data={data} options={{responsive:true,title:{
+                    <Line data={data} options={{responsive:true,title:{
                         display:true,
-                        text:'Monthly Spending By Category',
+                        text:title,
                         fontSize:20
-                        }
+                        },
+                        scales: {
+                            yAxes: [{
+                              scaleLabel: {
+                                display: true,
+                                labelString: 'Amount ($)',
+                                
+                              },
+                              gridLines: {
+                              },
+                            }],
+                            xAxes: [{
+                              scaleLabel: {
+                                display: true,
+                                labelString: axis
+                              },
+                              gridLines: {
+                                display: false,
+                              },
+                            }],
+                        }    
                         
                     }}/></Container>
                 </div>)
