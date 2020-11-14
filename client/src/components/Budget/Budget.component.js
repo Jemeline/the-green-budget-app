@@ -1,11 +1,6 @@
 import React, { Component} from 'react';
-<<<<<<< HEAD
-import {Alert,Button,Col,Row,Container,Form,FormGroup, Label, Input,Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
-import {categories,subcategories} from './budgetCategories';
-=======
 import {Alert,Button,Col,Row,Form,FormGroup,Container, Label, Input,Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 import {categories,subcategories,monthNames, monthLabels} from './budgetCategories';
->>>>>>> origin/filter-budget-charts
 import Select from 'react-select';
 import {getUser,getName} from '../../utils/common';
 import '../../css/Budget.css';
@@ -686,7 +681,7 @@ class Budget extends Component {
                 </ModalFooter>
             </Modal>
             </div>
-            <Container fluid="xl">
+            <Container fluid={true}>
             <MuiThemeProvider theme={tableTheme}> 
                     <MUIDataTable
                         title={"My Budget"}
