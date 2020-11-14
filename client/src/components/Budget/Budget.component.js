@@ -50,7 +50,7 @@ class Budget extends Component {
             endDate:'',
             formats:[],
             doughnutData:{},
-            years:[],
+            years:new Array(),
             year:{value:new Date().getFullYear(),label:new Date().getFullYear()},
             defaultYear:{value:new Date().getFullYear(),label:new Date().getFullYear()},
             months:monthNames,
@@ -90,7 +90,7 @@ class Budget extends Component {
     };
     clearFormFields(){
         this.setState({description:'',amount:'',category:null,subcategories:subcategories,
-            subcategory:null,date:'',budgetId:0,startDate:'',endDate:'',years:[],
+            subcategory:null,date:'',budgetId:0,startDate:'',endDate:'',
         });
     };
     handleCategory = category => {
@@ -148,6 +148,7 @@ class Budget extends Component {
                             this.toggle();
                         };  
                     };
+                    this.setState({year: this.state.defaultYear, month:this.state.defaultMonth, lineLabels:this.state.defaultLineLabels});
                     await this.renderBudgetTable();
                 } else {
                     this.props.history.push('/login');
@@ -259,6 +260,7 @@ class Budget extends Component {
                 const transformedData = transformBudgetData(data);
                 const transformDate= transformedData.map(function(item){return {date:new Date(item[2]),category:item[3],cost:item[6]}});
                 const years= getYears(transformDate);
+                this.setState({years:years});
                 shiftBudgetData(transformedData);
                 if (transformedData.length === 0){
                     this.setState({ budget: transformedData, loading:'complete',modal:true,newUser:true, hiddenButtons:true });
@@ -266,7 +268,7 @@ class Budget extends Component {
                 } else {
                     this.setState({ budget: transformedData, loading:'complete' });
                 }
-                years.map((year) => this.state.years.push({ value:year,label:year}));
+                console.log(years);
                 await this.renderDoughnut(this.state.year.value,this.state.month.id);
                 await this.renderLine(this.state.year.value,this.state.month.id);
             } else {

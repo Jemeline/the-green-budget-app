@@ -1,6 +1,7 @@
 import {generateToken,getBudgetData} from '../../utils/apiCalls';
 import {transformBudgetData, shiftBudgetData,generateBudgetDataPayload} from "../Budget/BudgetUtils.js";
 import {getUser} from '../../utils/common';
+import { yellow } from '@material-ui/core/colors';
 
 export async function getChartData(year, month){
     try {
@@ -49,11 +50,13 @@ export function getCategories(data){
 
 export function getYears(data){
     const years = [];
+    const yearList = [];
     console.log(data);
     const temp = data.map(function(ele){
         const y = ele.date.getFullYear();
-        if (!years.includes(y)){
-            years.push(y);
+        if (!yearList.includes(y)){
+            yearList.push(y);
+            years.push({value:y,label:y});
         }
     });
     return years;
