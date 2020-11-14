@@ -75,3 +75,47 @@ export async function getBudgetData(data, headers) {
         return null;
     }    
 };
+
+// BudgetForm.component.js
+export async function addIncomeItem(data, headers) {
+    try {
+        // const res = await axios.post('https://green-budget-app.herokuapp.com/api/income/create-income', data, headers);
+        const res = await axios.post('http://localhost:5000/api/income/create-income', data, headers);
+        return await res;
+    } catch (error){
+        console.log(error);
+        return null;
+    }    
+};
+
+export async function removeIncomeItem(data, headers) {
+    try {
+        // const res = await axios.post('https://green-budget-app.herokuapp.com/api/income/delete-income', data, headers);
+        const res = await axios.post('http://localhost:5000/api/income/delete-income', data, headers);
+        return await res;
+    } catch (error){
+        console.log(error);
+        return null;
+    }    
+};
+export async function updateIncomeItem(data, headers) {
+    try {
+        // const res = await axios.post('https://green-budget-app.herokuapp.com/api/income/update-income', data, headers);
+        const res = await axios.post('http://localhost:5000/api/income/update-income', data, headers);
+        return await res;
+    } catch (error){
+        console.log(error);
+        return null;
+    }    
+};
+
+export async function getIncomeData(data, headers) {
+    try {
+        // const res = await axios.post('https://green-budget-app.herokuapp.com/api/income/read-incomes', data, headers);
+        const res = await axios.post('http://localhost:5000/api/income/read-incomes', data, headers);
+        return await res.data.data;
+    } catch (error){
+        console.log(error);
+        return null;
+    }    
+};

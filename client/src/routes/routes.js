@@ -10,6 +10,7 @@ import PrivateRoute from './Private.route';
 import AdminRoute from './Admin.route';
 import PublicRoute from './Public.route';
 import Budget from '../components/Budget/Budget.component';
+import Income from '../components/Income/Income.component';
 
 const Routes = () => (
   <Switch>
@@ -19,7 +20,9 @@ const Routes = () => (
     <PublicRoute exact path="/contact" component={Contact} />
     <PrivateRoute exact path="/dashboard" component={Dashboard} />
     <PrivateRoute exact path="/budget" component={Budget} />
+    <PrivateRoute exact path="/income" component={Income} />
     <AdminRoute exact path="/admin" component={Admin} />
+    
   </Switch>
 );
 

@@ -1,5 +1,5 @@
 import React, { Component} from 'react';
-import {Alert,Button,Col,Row,Form,FormGroup,Container, Label, Input,Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
+import {Alert,Button,Col,Row,Container,Form,FormGroup, Label, Input,Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 import {categories,subcategories} from './budgetCategories';
 import Select from 'react-select';
 import {getUser,getName} from '../../utils/common';
@@ -519,7 +519,7 @@ class Budget extends Component {
                 </ModalFooter>
             </Modal>
             </div>
-            <Container fluid={true}>
+            <Container fluid="xl">
             <MuiThemeProvider theme={tableTheme}> 
                     <MUIDataTable
                         title={"My Budget"}

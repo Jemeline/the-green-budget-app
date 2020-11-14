@@ -1,12 +1,11 @@
 import React from 'react';
-// import {Container} from 'reactstrap';
+import {Container} from 'reactstrap';
 import { Doughnut } from "react-chartjs-2";
 import '../../css/DoughnutChart.css';
 import {Col,Row} from 'reactstrap';
 import { Line } from 'react-chartjs-2';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import Container from '@material-ui/core/Container';
 
 
 
@@ -21,7 +20,7 @@ export const BudgetCharts = (props) => {
             return (
                 <div>
                     <br></br>
-                    <Container  fluid={true}>
+                    <Container fluid={true}>
                     <Row>
                         <Col xl="6"> 
                         <Line data={data} options={{responsive:true,title:{
