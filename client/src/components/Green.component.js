@@ -6,31 +6,36 @@ import Icon from "./Green/Icon.js";
 import '../css/Green.css';
 import Info from "./Green/Info.js";
 import categories from "./Budget/budgetCategories.js";
+import { generateToken,getBudgetData } from '../utils/apiCalls';
+import {generateBudgetDataPayload} from "./Budget/BudgetUtils.js";
+import {getUser,getName} from '../utils/common';
 
-let expenses = [{
-  id: "12345", 
-  email: "test@email.com", 
-  date: "01/01/1000",
-  category: "transportation",
-  subcategory: "gas",
-  description: "gas",
-  amount: "12.35",
-  }, 
-  {
-  id: "12345", 
-  email: "test@email.com", 
-  date: "01/01/1000",
-  category: "food",
-  subcategory: "dinner",
-  description: "chicfila",
-  amount: "12.35",
-  }];
+// let expenses = [{
+//   id: "12345", 
+//   email: "test@email.com", 
+//   date: "01/01/1000",
+//   category: "Transportation",
+//   subcategory: "gas",
+//   description: "gas",
+//   amount: "12.35",
+//   }, 
+//   {
+//   id: "12345", 
+//   email: "test@email.com", 
+//   date: "01/01/1000",
+//   category: "Food",
+//   subcategory: "dinner",
+//   description: "chicfila",
+//   amount: "12.35",
+  // }];
 
 // let displayInfo = function() {
 //       console.log("DISPLAYING INFO")
 // }
 
 //const [count, setCount] = useState(0);
+
+
 
 class Green extends Component {
 
@@ -39,22 +44,35 @@ class Green extends Component {
     this.state = {
        type: null,
        expense: null,
-       value: 0
+       value: 0,
+       expenses: []
      };   
      this.displayInfo = this.displayInfo.bind(this);
   }
 
-  displayInfo(data){
+  displayInfo(displayData){
     this.setState({
       display: true,
-      type: data.subcategory,
-      expense: data.amount,
-      value: this.state.value + 1
+      expense: displayData,
     });
-    console.log(this.state)
+    
+  }
+
+  async componentDidMount(){
+    await this.getData();
+  };
+
+  async getData(){
+    const token = await generateToken(getUser());
+    const payload = generateBudgetDataPayload(token);
+    const data = await getBudgetData(payload.body,payload.headers);
+    let dataArray = []
+    data.map(expense => dataArray.push(expense));
+    this.setState({expenses: dataArray})
   }
 
   render() {
+
   let main = (
   <div className="">
     <header className="">
@@ -63,7 +81,7 @@ class Green extends Component {
         <Col className = "bg-white">
         <Container>
           <Row className = "iconRow border rounded ml-2">
-            {expenses.map(expense => (
+            {this.state.expenses.map(expense => (
               <Icon data = {expense} displayFunction = {this.displayInfo} />
             ))}
           </Row>

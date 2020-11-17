@@ -26,6 +26,11 @@ code {
   width: 50%;
 }
 
+.iconRow{
+  overflow: scroll;
+  height: 75vh;
+}
+
 /* Clear floats after the columns */
 .iconRow:after {
   content: "";
@@ -51,7 +56,7 @@ code {
 
 .btn-circle.btn-xl { 
   /* background-image: url("https://homepages.cae.wisc.edu/~ece533/images/airplane.png"); */
-  /* background: no-repeat url("./emojis/gas.png"); */
+  /* background: no-repeat url("../emojis/gas.png");  */
   width: 70px; 
   height: 70px; 
   padding: 5px 5px; 
@@ -68,8 +73,13 @@ code {
   transform: scale(1.5);
 }
 
+.iconText {
+    width: 50px;
+
+}
+
 .card{
-  margin-top: 20px;
+  /* margin-top: 20px; */
   margin-bottom: 20px;
   background-color: rgb(153, 184, 194);
   padding: 20px;
@@ -96,7 +106,7 @@ h1 {
     display: flex;
     align-items: center;  
     justify-content: center;
-  } 
+} 
 
 #infolabel{
     font-size: 30px;
@@ -105,6 +115,12 @@ h1 {
 }
 
 .fill {
+    margin-top: 0px;
     height: 100%;
     width: 100%;
+}
+
+.iconImage {
+    width: 50px; 
+    height: 50px; 
 }

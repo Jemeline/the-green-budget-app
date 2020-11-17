@@ -16,12 +16,12 @@ const Routes = () => (
   <Switch>
     <PublicRoute exact path="/" component={Home} />
     <PublicRoute exact path="/login" component={Login} />
-    <PrivateRoute exact path="/dashboard" component={Dashboard} />
-    <AdminRoute exact path="/admin" component={Admin} />
     <PublicRoute exact path="/about" component={About} />
     <PublicRoute exact path="/contact" component={Contact} />
+    <PrivateRoute exact path="/dashboard" component={Dashboard} />
     <PrivateRoute exact path="/budget" component={Budget} />
     <PrivateRoute exact path="/green" component={Green} />
+    <AdminRoute exact path="/admin" component={Admin} />
   </Switch>
 );
 

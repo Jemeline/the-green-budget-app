@@ -1,4 +1,3 @@
-
 import {createMuiTheme} from '@material-ui/core';
 import {getUser} from '../../utils/common';
 
@@ -104,7 +103,7 @@ export function generateDeleteExpensePayload(state,token){
       }},
     }
 };
-export function generateBudgetDataPayload(state,token){
+export function generateBudgetDataPayload(token){
     return {
       body: 
       {
