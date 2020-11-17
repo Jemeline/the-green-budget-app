@@ -1,6 +1,10 @@
 import React, { Component} from 'react';
 import {Alert,Button,Col,Row,Form,FormGroup,Container, Label, Input,Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
+<<<<<<< HEAD
 import {categories,subcategories,monthNames, monthLabels} from './budgetCategories';
+=======
+import {categories,subcategories} from './budgetCategories';
+>>>>>>> green
 import Select from 'react-select';
 import {getUser,getName} from '../../utils/common';
 import '../../css/Budget.css';
@@ -50,6 +54,7 @@ class Budget extends Component {
             endDate:'',
             formats:[],
             doughnutData:{},
+<<<<<<< HEAD
             years:new Array(),
             year:{value:new Date().getFullYear(),label:new Date().getFullYear()},
             defaultYear:{value:new Date().getFullYear(),label:new Date().getFullYear()},
@@ -60,6 +65,10 @@ class Budget extends Component {
             lineLabels:monthLabels,
             defaultLineLabels:monthLabels,
             tempMonth: {id:12, value:"All", label:"All", days:0}
+=======
+            years:[],
+            year:{ value:2020,label:2020},
+>>>>>>> green
         }; 
         this.toggleMonthFilter = this.toggleMonthFilter.bind(this);
         this.toggleYearFilter = this.toggleYearFilter.bind(this);
@@ -68,7 +77,11 @@ class Budget extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
     
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> green
 // Alert
     onDismiss = () => {this.setState({alertOn:false,alertMessage:'',alertColor:'danger',})};
     handleAlert(message,color){
@@ -150,7 +163,10 @@ class Budget extends Component {
                             this.toggle();
                         };  
                     };
+<<<<<<< HEAD
                     this.setState({year: this.state.defaultYear, month:this.state.defaultMonth, lineLabels:this.state.defaultLineLabels});
+=======
+>>>>>>> green
                     await this.renderBudgetTable();
                 } else {
                     this.props.history.push('/login');
@@ -164,6 +180,7 @@ class Budget extends Component {
     
 // Filter Modal
     toggleFilter() {
+<<<<<<< HEAD
         this.setState({modalFilter:!this.state.modalFilter,
             modalYearFilter:false,modalMonthFilter:false,modal:false});
     };
@@ -208,6 +225,9 @@ class Budget extends Component {
             console.log(error);
             this.handleAlert("Oops... Something Went Wrong");
         }
+=======
+        this.setState({modalFilter:!this.state.modalFilter});
+>>>>>>> green
     };
     async handleFilterSubmit() {
         try{
@@ -240,13 +260,27 @@ class Budget extends Component {
     };
     
     async filterThisYear(){
+<<<<<<< HEAD
+=======
+        const year = new Date().getFullYear();
+        const month = new Date().getMonth()+1;
+        await this.renderBudgetTable();
+>>>>>>> green
         this.setState({
             budget:this.state.budget.filter(entry=>
                 entry[0].slice(0,4)===this.state.year.value.toString()
             )
         });
     };
+<<<<<<< HEAD
     async filterThisMonth(){
+=======
+
+    async filterThisMonth(){
+        const year = new Date().getFullYear();
+        const month = new Date().getMonth()+1;
+        await this.renderBudgetTable();
+>>>>>>> green
         this.setState({
             budget:this.state.budget.filter(entry=>
                 entry[0].slice(0,4)===this.state.year.value.toString() && parseInt(entry[0].slice(5,7))===(this.state.month.id+1)
@@ -256,6 +290,7 @@ class Budget extends Component {
     
 // Table
     async renderBudgetTable (){
+<<<<<<< HEAD
         this.clearFormFields();
         try {
             if (getUser()){
@@ -453,14 +488,171 @@ class Budget extends Component {
     };
 
 // General
+=======
+        try {
+        this.clearFormFields();
+        if (getUser()){
+            const token = await generateToken(getUser());
+            const payload = generateBudgetDataPayload(token);
+            const data = await getBudgetData(payload.body,payload.headers);
+            const transformedData = transformBudgetData(data);
+            shiftBudgetData(transformedData);
+            if (transformedData.length === 0){
+                this.setState({ budget: transformedData, loading:'complete',modal:true,newUser:true, hiddenButtons:true });
+                this.handleAlert("Welcome " +getName()+", add an entry to begin your journey with Green Financing.",'success');
+            } else {
+                this.setState({ budget: transformedData, loading:'complete' });
+            }
+            await this.renderDoughnut();
+            const years= await getYears(await getChartData());
+            years.map((year) => this.state.years.push({ value:year,label:year}));
+            const defaultYear = new Date().getFullYear();
+            await this.renderLine(defaultYear);
+        } else {
+            this.props.history.push('/login');
+        }
+    }catch (error){
+        console.log(error);
+        this.setState({loading:"error"})
+    }
+    };  
+    
+// FAB
+    changeStyle(style){
+        this.setState({buttonFormat:style});
+    };
+// Toggle Button
+    handleFormat = (event, newFormats) => {
+        this.setState({formats:newFormats});
+    };
+    
+
+
+// Charts 
+    async renderDoughnut(){
+        try{
+            const defaultYear = new Date().getFullYear();
+            const data= await getChartData(defaultYear);
+            if (data){
+                const categories = getCategories(data);
+                const catCost =new Array(categories.length).fill(0);
+                data.map(function(ele){
+                    const ind = categories.indexOf(ele.category);
+                    catCost[ind]= catCost[ind] + ele.cost;
+                })
+                const x= catCost.map(function(ele){
+                    return ele.toFixed(2);
+                });
+                const backgroundColor = new Array();
+                const hoverBackgroundColor = new Array();
+                categories.map(function(cat){
+                    backgroundColor.push(categoryColors.filter(c => c.value === cat)[0].colorBorder);
+                    hoverBackgroundColor.push(categoryColors.filter(c => c.value === cat)[0].colorHover);
+                });
+                this.setState({doughnutData: {
+                    datasets: [
+                    {
+                    data: x,
+                    backgroundColor: backgroundColor,
+                        hoverBackgroundColor: hoverBackgroundColor
+                    }
+                ],
+                    labels: categories
+                }});
+                this.setState({loading:"complete"});
+
+
+            } else {
+                this.props.history.push('/login');
+            }
+        }catch (error){
+            this.setState({loading:'error'});
+            console.log(error);
+        }
+    };
+
+    async renderLine(year){
+        try{
+            const data = await getChartData(year);
+            if (data){
+                const monthCostArray = new Array(12).fill(null);
+                data.map(function(ele){
+                    const ind = ele.date.getMonth();
+                    monthCostArray[ind] = monthCostArray[ind] + ele.cost;
+                    if ((ind>0 || ind<monthCostArray.length-1) && !monthCostArray[ind+1]){
+                        monthCostArray[ind+1]=0
+                    };
+                    if ((ind>0 || ind<monthCostArray.length-1) && !monthCostArray[ind-1]){
+                        monthCostArray[ind-1]=0
+                    } ;  
+                });
+                const categories = getCategories(data);
+                const categoryMonth = Array(categories.length).fill(0).map(x => Array(12).fill(null));
+                const x = data.map(function(ele){
+                    const indCat = categories.indexOf(ele.category);
+                    const indMonth = ele.date.getMonth();
+                    categoryMonth[indCat][indMonth]= categoryMonth[indCat][indMonth] + ele.cost;
+                    if ((indMonth<categoryMonth[indCat].length-1) && !categoryMonth[indCat][indMonth+1]){
+                        categoryMonth[indCat][indMonth+1]=0
+                    };
+                    if ((indMonth<categoryMonth[indCat].length-1) && !categoryMonth[indCat][indMonth-1]){
+                        categoryMonth[indCat][indMonth-1]=0
+                    };
+                });
+                const datasets=new Array(categories.length);
+                let ind = 0;
+                categoryMonth.map(function(catGroup){
+                    datasets[ind]=
+                    {
+                        label: categories[ind],
+                        data: catGroup,
+                        fill: false,
+                        backgroundColor: categoryColors.filter(c => c.value === categories[ind])[0].color,
+                        borderColor: categoryColors.filter(c => c.value === categories[ind])[0].colorBorder,
+                        pointHoverBackgroundColor:categoryColors.filter(c => c.value === categories[ind])[0].color,
+                        pointHoverRadius:8,
+                        lineTension: 0.4,
+                        spanGaps:false
+                    };
+                    ind = ind+1;
+                });
+                datasets.push({
+                    label: "Total",
+                    data: monthCostArray,
+                    fill: false,
+                    backgroundColor: "rgba(75,192,192,0.2)",
+                    borderColor: "rgba(75,192,192,1)",
+                    lineTension: 0.4,
+                    spanGaps:false,
+                    pointHoverBackgroundColor:"rgba(75,192,192,0.2)",
+                    pointHoverRadius:8,
+                });
+                this.setState({ datasets:datasets, loading:"complete" });
+            } else {
+                this.setState({loading:'loading'});
+            }
+        } catch (error){
+            this.setState({loading:'error'});
+            console.log(error);
+        }
+    };
+
+>>>>>>> green
     async componentDidMount(){
         this._isMounted = true;
         if (this._isMounted){
             this.setState({formats:["line","donut"]})
         };
         this.setState({loading:'loading'});
+<<<<<<< HEAD
         await this.renderBudgetTable();      
     };
+=======
+        await this.renderBudgetTable();
+    };
+
+    
+>>>>>>> green
     componentWillUnmount() {
         this._isMounted = false;
     };
@@ -499,6 +691,10 @@ class Budget extends Component {
             },
             MuiTableRow: { hover: { '&$root': { '&:hover': { backgroundColor: 'green' }, } }, 
             }
+<<<<<<< HEAD
+=======
+            
+>>>>>>> green
         };
         const toggleGroup = <ToggleButtonGroup orientation="vertical" style={{float:'left'}} value={this.state.formats} onChange={this.handleFormat} aria-label="text formatting">
                             <ToggleButton style={{outline:'none'}} value="line" aria-label="bold">
@@ -508,6 +704,11 @@ class Budget extends Component {
                                 <DonutLargeIcon />
                             </ToggleButton>
                         </ToggleButtonGroup>
+<<<<<<< HEAD
+=======
+
+        
+>>>>>>> green
         if (this.state.loading === 'loading') {
             return (
                 <div>
@@ -522,10 +723,12 @@ class Budget extends Component {
                     <ReactLoading className="loading" type={"spinningBubbles"} color={"#A62817"} height={'15%'} width={'15%'} />
                 </div>
         )};
+        
         return (
             <div>
             <div>
             {toggleGroup}
+<<<<<<< HEAD
             <BudgetCharts datasets={this.state.datasets} lineLabels={this.state.lineLabels} formats={this.state.formats} data={this.state.doughnutData} year={this.state.year} month={this.state.month}/>
             <br></br>  
             <Modal isOpen={this.state.modalYearFilter} toggle={this.toggleYearFilter} close={closeBtnExYearFilter}>
@@ -590,6 +793,10 @@ class Budget extends Component {
                 </ModalFooter>
             </Modal>
 
+=======
+            <BudgetCharts datasets={this.state.datasets} formats={this.state.formats} data={this.state.doughnutData}/>
+            <br></br>
+>>>>>>> green
             <Modal isOpen={this.state.modalFilter} toggle={this.toggleFilter} close={closeBtnExFilter}>
                 <ModalHeader toggle={this.toggleFilter} close={closeBtnInFilter}>Date Range Filter</ModalHeader>
                 <ModalBody>
@@ -694,16 +901,27 @@ class Budget extends Component {
                     />  
                     </MuiThemeProvider>      
             </Container>
+<<<<<<< HEAD
                     <Fab icon={<RefreshIcon/>} onClick={async () => {this.setState({year: this.state.defaultYear, month:this.state.defaultMonth, lineLabels:this.state.defaultLineLabels}); await this.renderBudgetTable();}} mainButtonStyles={{backgroundColor: '#3f50b5',outline:'none'}} style={ButtonForm[this.state.buttonFormat].refresh}></Fab>
+=======
+            <Fab icon={<RefreshIcon/>} onClick={async () => {await this.renderBudgetTable();}} mainButtonStyles={{backgroundColor: '#3f50b5',outline:'none'}} style={ButtonForm[this.state.buttonFormat].refresh}></Fab>
+>>>>>>> green
                     <Fab icon={<AddIcon/>} onClick={this.toggle} mainButtonStyles={{backgroundColor: '#3f50b5',outline:'none'}} style={ButtonForm[this.state.buttonFormat].add}></Fab>
                     <Fab icon={<FilterListIcon/>} mainButtonStyles={{backgroundColor: '#3f50b5',outline:'none'}} style={ButtonForm[this.state.buttonFormat].filter}>
                         <Action style={{backgroundColor: '#01579b',outline:'none'}} onClick={this.toggleFilter}>
                         <DateRangeIcon/>
                         </Action>
+<<<<<<< HEAD
                         <Action style={{backgroundColor: '#01579b',outline:'none'}} onClick={this.toggleYearFilter}>
                         Y
                         </Action>
                         <Action style={{backgroundColor: '#01579b',outline:'none'}} onClick={this.toggleMonthFilter}>
+=======
+                        <Action style={{backgroundColor: '#01579b',outline:'none'}} onClick={async () => {await this.filterThisYear()}}>
+                        Y
+                        </Action>
+                        <Action style={{backgroundColor: '#01579b',outline:'none'}} onClick={async() => {await this.filterThisMonth()}}>
+>>>>>>> green
                         M
                         </Action>
                     </Fab>   

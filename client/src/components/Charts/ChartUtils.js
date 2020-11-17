@@ -1,8 +1,15 @@
 import {generateToken,getBudgetData} from '../../utils/apiCalls';
+<<<<<<< HEAD
 import {transformBudgetData, generateBudgetDataPayload} from "../Budget/BudgetUtils.js";
 import {getUser} from '../../utils/common';
 
 export async function getChartData(year, month){
+=======
+import {transformBudgetData, shiftBudgetData,generateBudgetDataPayload} from "../Budget/BudgetUtils.js";
+import {getUser} from '../../utils/common';
+
+export async function getChartData(year){
+>>>>>>> green
     try {
         if(getUser()){
             const token = await generateToken(getUser());
@@ -10,6 +17,7 @@ export async function getChartData(year, month){
             const data = await getBudgetData(payload.body,payload.headers);
             const transformedData = transformBudgetData(data);
             const transformDate= transformedData.map(function(item){return {date:new Date(item[2]),category:item[3],cost:item[6]}});
+<<<<<<< HEAD
             const filteredByYear = transformDate.filter(function(ele){
                 return ele.date.getFullYear()===year;
             });
@@ -20,6 +28,17 @@ export async function getChartData(year, month){
                 })
                 return filteredByMonth;
             }
+=======
+            if (year){
+                const filteredByYear = transformDate.filter(function(ele){
+                    console.log(ele.date.getFullYear())
+                    return ele.date.getFullYear()===year;
+                });
+                return filteredByYear;
+            }else {
+                return transformDate;
+            }    
+>>>>>>> green
         } else {
             return null;    
         }
@@ -45,6 +64,7 @@ export function getCategories(data){
     return categories;
 };
 
+<<<<<<< HEAD
 export function getYears(data){
     const years = [];
     const yearList = [];
@@ -57,4 +77,15 @@ export function getYears(data){
         }
     });
     return years;
+=======
+export async function getYears(data){
+    const years = []
+    const temp = data.map(function(ele){
+        const y = ele.date.getFullYear();
+        if (!years.includes(y)){
+            years.push(y);
+        }
+    });
+    return await years;
+>>>>>>> green
 };
