@@ -17,9 +17,6 @@ code {
     monospace;
 }
 
-.column {
-  float: left;
-}
 
 .half{
   float: left;
@@ -74,8 +71,8 @@ code {
 }
 
 .iconText {
-    width: 50px;
-
+    width: 70px;
+    overflow-y: inherit;
 }
 
 .card{
@@ -124,3 +121,15 @@ h1 {
     width: 50px; 
     height: 50px; 
 }
+
+.logo {
+  height: 60px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+eainfo{
+  height: 60px;
+  line-height: 60px;
+}
+

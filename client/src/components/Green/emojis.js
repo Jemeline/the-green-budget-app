@@ -18,9 +18,13 @@ import Investments from './emojis/Investments.png';
 import Hobbies from './emojis/Hobbies.png';
 import Pets from './emojis/Pets.png';
 import Other from './emojis/Other.png';
+import Malaria from './emojis/Malaria.png';
+import OneAcreFund from './emojis/OneAcreFund.png';
+import Deworm from './emojis/Deworm.png';
+
 
 let images = {Transportation, Food, Utilities, Social, Clothing, Medical, 
 Health, Beauty, Insurance, Personal, Debt, Retirement, Savings, Education, 
-Giving, Taxes, Investments, Hobbies, Pets, Other}
+Giving, Taxes, Investments, Hobbies, Pets, Other, Malaria, OneAcreFund, Deworm}
 
 export default images;
