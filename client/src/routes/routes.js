@@ -22,13 +22,7 @@ const Routes = () => (
     <PrivateRoute exact path="/dashboard" component={Dashboard} />
     <PrivateRoute exact path="/budget" component={Budget} />
     <PrivateRoute exact path="/income" component={Income} />
-    <AdminRoute exact path="/admin" component={Admin} />
     <PrivateRoute exact path="/green" component={Green} />
-    <PrivateRoute exact path="/green" component={Green} />
-<<<<<<< HEAD
-    <PrivateRoute exact path="/income" component={Income} />
-=======
->>>>>>> green
     <AdminRoute exact path="/admin" component={Admin} />
   </Switch>
 );

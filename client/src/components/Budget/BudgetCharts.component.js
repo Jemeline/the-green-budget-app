@@ -1,6 +1,5 @@
 import React from 'react';
 import {Container} from 'reactstrap';
-<<<<<<< HEAD
 import { Doughnut,Line } from "react-chartjs-2";
 import '../../css/DoughnutChart.css';
 import {Col,Row} from 'reactstrap';
@@ -18,22 +17,6 @@ export const BudgetCharts = (props) => {
         const title = month + " "+ props.year.value +' '+ description+' Breakdown By Category';
         const data = {
             labels: props.lineLabels,
-=======
-import { Doughnut } from "react-chartjs-2";
-import '../../css/DoughnutChart.css';
-import {Col,Row} from 'reactstrap';
-import { Line } from 'react-chartjs-2';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-
-
-
-
-export const BudgetCharts = (props) => {
-    const monthNames = ["January","February","March","April","May","June","July", "August","September","October","November","December"];
-        const data = {
-            labels: monthNames,
->>>>>>> green
             datasets: props.datasets
         };
         if (props.formats.length>1){
@@ -45,7 +28,6 @@ export const BudgetCharts = (props) => {
                         <Col xl="6"> 
                         <Line data={data} options={{responsive:true,title:{
                         display:true,
-<<<<<<< HEAD
                         text:titleLine,
                         fontSize:20
                         },
@@ -69,11 +51,6 @@ export const BudgetCharts = (props) => {
                               },
                             }],
                         }    
-=======
-                        text:'Monthly Spending By Category',
-                        fontSize:20
-                        }
->>>>>>> green
                         
                     }}/>
                         </Col>
@@ -87,11 +64,7 @@ export const BudgetCharts = (props) => {
                             maintainAspectRatio: true,
                             title:{
                                 display:true,
-<<<<<<< HEAD
                                 text:title ,
-=======
-                                text:'Monthly Spending By Category',
->>>>>>> green
                                 fontSize:20
                             },
                             
@@ -109,7 +82,6 @@ export const BudgetCharts = (props) => {
                 <div>
                     <br></br>
                     <Container >
-                        
                             <Doughnut
                             data={props.data}
                             options={{
@@ -117,11 +89,7 @@ export const BudgetCharts = (props) => {
                             maintainAspectRatio: true,
                             title:{
                                 display:true,
-<<<<<<< HEAD
                                 text:title,
-=======
-                                text:'Monthly Spending By Category',
->>>>>>> green
                                 fontSize:20
                             },
                             
@@ -135,7 +103,6 @@ export const BudgetCharts = (props) => {
                 <div>
                     <br></br>
                     <Container > 
-<<<<<<< HEAD
                     <Line data={data} options={{responsive:true,title:{
                         display:true,
                         text:titleLine,
@@ -161,13 +128,6 @@ export const BudgetCharts = (props) => {
                               },
                             }],
                         }    
-=======
-                        <Line data={data} options={{responsive:true,title:{
-                        display:true,
-                        text:'Monthly Spending By Category',
-                        fontSize:20
-                        }
->>>>>>> green
                         
                     }}/></Container>
                 </div>)
