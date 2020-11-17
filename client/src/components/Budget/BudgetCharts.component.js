@@ -1,23 +1,20 @@
 import React from 'react';
 import {Container} from 'reactstrap';
-import { Doughnut } from "react-chartjs-2";
+import { Doughnut,Line } from "react-chartjs-2";
 import '../../css/DoughnutChart.css';
 import {Col,Row} from 'reactstrap';
-import { Line } from 'react-chartjs-2';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-
-
-
 
 export const BudgetCharts = (props) => {
         let month = "";
         let axis="Month";
+        let description='Yearly';
         if (props.month.id !== 12){
             month=props.month.value;
             axis="Day"
+            description = "Daily"
         }
-        const title = month + " "+ props.year.value +' Spending By Category';
+        const titleLine = month + " "+ props.year.value +' '+ description +' Spending';
+        const title = month + " "+ props.year.value +' '+ description+' Breakdown By Category';
         const data = {
             labels: props.lineLabels,
             datasets: props.datasets
@@ -31,7 +28,7 @@ export const BudgetCharts = (props) => {
                         <Col xl="6"> 
                         <Line data={data} options={{responsive:true,title:{
                         display:true,
-                        text:title,
+                        text:titleLine,
                         fontSize:20
                         },
                         scales: {
@@ -109,7 +106,7 @@ export const BudgetCharts = (props) => {
                     <Container > 
                     <Line data={data} options={{responsive:true,title:{
                         display:true,
-                        text:title,
+                        text:titleLine,
                         fontSize:20
                         },
                         scales: {

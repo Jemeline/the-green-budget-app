@@ -53,6 +53,7 @@ class Budget extends Component {
             years:new Array(),
             year:{value:new Date().getFullYear(),label:new Date().getFullYear()},
             defaultYear:{value:new Date().getFullYear(),label:new Date().getFullYear()},
+            tempYear:{value:new Date().getFullYear(),label:new Date().getFullYear()},
             months:monthNames,
             month: {id:12, value:"All", label:"All", days:0},
             defaultMonth: {id:12, value:"All", label:"All", days:0},
@@ -83,6 +84,7 @@ class Budget extends Component {
             this.setState({
                 modal:!this.state.modal,
                 hiddenButtons:!this.hiddenButtons,
+                modalYearFilter:false,modalFilter:false,modalMonthFilter:false
             });
             this.clearFormFields();
             this.onDismiss();
@@ -102,7 +104,7 @@ class Budget extends Component {
         this.setState({subcategory:subcategory});
     };
     handleYearSelect = async select => {
-        this.setState({year:select});
+        this.setState({tempYear:select});
     };
     handleMonthSelect = select => {
         this.setState({tempMonth:select});
@@ -162,13 +164,16 @@ class Budget extends Component {
     
 // Filter Modal
     toggleFilter() {
-        this.setState({modalFilter:!this.state.modalFilter});
+        this.setState({modalFilter:!this.state.modalFilter,
+            modalYearFilter:false,modalMonthFilter:false,modal:false});
     };
     toggleYearFilter() {
-        this.setState({modalYearFilter:!this.state.modalYearFilter});
+        this.setState({modalYearFilter:!this.state.modalYearFilter,
+            modalMonthFilter:false,modalFilter:false,modal:false});
     };
     toggleMonthFilter() {
-        this.setState({modalMonthFilter:!this.state.modalMonthFilter});
+        this.setState({modalMonthFilter:!this.state.modalMonthFilter,
+            modalYearFilter:false,modalFilter:false,modal:false});
     };
     async handleYearFilterSubmit() {
         try{
@@ -176,9 +181,9 @@ class Budget extends Component {
             if (!this.state.year){
                 this.handleAlert("Please Fill All Fields");
             }else {
+                this.setState({year:this.state.tempYear,tempYear:this.state.defaultYear})
                 this.setState({month:this.state.defaultMonth});
                 this.setState({lineLabels:this.state.defaultLineLabels});
-                console.log(this.state);
                 this.toggleYearFilter();
                 await this.renderBudgetTable();
                 await this.filterThisYear();
@@ -279,11 +284,6 @@ class Budget extends Component {
             this.setState({loading:"error"})
     }
     };  
-    
-// FAB
-    changeStyle(style){
-        this.setState({buttonFormat:style});
-    };
 // Toggle Button
     handleFormat = (event, newFormats) => {
         this.setState({formats:newFormats});
@@ -567,7 +567,7 @@ class Budget extends Component {
                             <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
                                 <Label ><strong>Year</strong></Label>
                                 <Select
-                                    value={this.state.year}
+                                    value={this.state.tempYear}
                                     onChange={this.handleYearSelect}
                                     options={this.state.years}
                                 />   
