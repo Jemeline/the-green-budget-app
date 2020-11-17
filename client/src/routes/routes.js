@@ -10,18 +10,27 @@ import PrivateRoute from './Private.route';
 import AdminRoute from './Admin.route';
 import PublicRoute from './Public.route';
 import Budget from '../components/Budget/Budget.component';
+<<<<<<< HEAD
 import Green from '../components/Green.component';
+=======
+import Income from '../components/Income/Income.component';
+>>>>>>> ddf11e7a8d91c3130a7735a3e507156a1d040716
 
 const Routes = () => (
   <Switch>
     <PublicRoute exact path="/" component={Home} />
     <PublicRoute exact path="/login" component={Login} />
-    <PrivateRoute exact path="/dashboard" component={Dashboard} />
-    <AdminRoute exact path="/admin" component={Admin} />
     <PublicRoute exact path="/about" component={About} />
     <PublicRoute exact path="/contact" component={Contact} />
+    <PrivateRoute exact path="/dashboard" component={Dashboard} />
     <PrivateRoute exact path="/budget" component={Budget} />
+<<<<<<< HEAD
     <PrivateRoute exact path="/green" component={Green} />
+=======
+    <PrivateRoute exact path="/income" component={Income} />
+    <AdminRoute exact path="/admin" component={Admin} />
+    
+>>>>>>> ddf11e7a8d91c3130a7735a3e507156a1d040716
   </Switch>
 );
 

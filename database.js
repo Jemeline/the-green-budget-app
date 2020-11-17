@@ -52,13 +52,40 @@ db.run(`CREATE TABLE IF NOT EXISTS expenses (
         console.log(err.message);  
     }
 }); 
+db.run(`CREATE TABLE IF NOT EXISTS income (
+    id INTEGER PRIMARY KEY AUTOINCREMENT, 
+    email text NOT NULL, 
+    date TEXT NOT NULL CHECK (date IS date(date)),
+    category text NOT NULL,
+    description text NOT NULL,
+    amount real NOT NULL,
+    FOREIGN KEY (email) REFERENCES
+    users_table (email)
+    )`,
+(err) => {
+    if (err) { 
+        console.log(err.message);  
+    }
+}); 
 // db.run(`INSERT INTO expenses (email, date, category, subcategory,description, amount) VALUES (?,?,?,?,?,?)`, 
 // ["admin@email.com",'2020-12-04',"Social","Dining","Root Cellar", 25.25], function(err) {
 //     if (err) {
 //       console.log(err.message);
 //     }
 // });
+// db.run(`INSERT INTO income (email, date, category,description, amount) VALUES (?,?,?,?,?)`, 
+// ["admin@email.com",'2020-12-04',"Wages/Salary","Paycheck 10-25-2020", 1225.05], function(err) {
+//     if (err) {
+//       console.log(err.message);
+//     }
+// });
 // db.run(`DROP TABLE expenses`),
+// (err) => {
+//     if (err) {
+//         console.log(err.message) ;
+//     }
+// }; 
+// db.run(`DROP TABLE income`),
 // (err) => {
 //     if (err) {
 //         console.log(err.message) ;

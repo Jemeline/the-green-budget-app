@@ -1,24 +1,24 @@
 export const categories = [
-    {id:1, value:"Transportation",label:"Transportation"},
-    {id:2, value:"Food",label:"Food"},
-    {id:3, value:"Utilities",label:"Utilities"},
-    {id:4, value:"Social",label:"Social"},
-    {id:5, value:"Clothing",label:"Clothing"},
-    {id:6, value:"Medical",label:"Medical"},
-    {id:7, value:"Health",label:"Health"},
-    {id:8, value:"Beauty",label:"Beauty"},
-    {id:9, value:"Insurance",label:"Insurance"},
-    {id:10, value:"Personal",label:"Personal"},
-    {id:11, value:"Debt",label:"Debt"},
-    {id:12, value:"Retirement",label:"Retirement"},
-    {id:13, value:"Savings",label:"Savings"},
-    {id:14, value:"Education",label:"Education"},
-    {id:15, value:"Giving",label:"Giving"},
-    {id:16, value:"Taxes",label:"Taxes"},
-    {id:17, value:"Investments",label:"Investments"},
-    {id:18, value:"Hobbies",label:"Hobbies"},
-    {id:19, value:"Pets",label:"Pets"},
-    {id:20, value:"Other",label:"Other"}
+    {id:1, value:"Transportation",label:"Transportation",color:"rgba(238,123,92,0.2)", colorBorder:"rgba(238,123,92,1)",colorHover:"rgba(238,123,92,0.7)"},
+    {id:2, value:"Food",label:"Food",color:"rgba(224, 159, 62,0.2)",colorBorder:"rgba(224, 159, 62,1)",colorHover:"rgba(224, 159, 62,0.7)"},
+    {id:3, value:"Utilities",label:"Utilities",color:'rgba(158, 42, 43,0.2)',colorBorder:'rgba(158, 42, 43,1)',colorHover:'rgba(158, 42, 43,0.7)'},
+    {id:4, value:"Social",label:"Social",color:'rgba(84, 11, 14,0.2)',colorBorder:'rgba(84, 11, 14,1)',colorHover:'rgba(84, 11, 14,0.7)'},
+    {id:5, value:"Clothing",label:"Clothing",color:'rgba(25, 114, 120,0.2)',colorBorder:'rgba(25, 114, 120,1)',colorHover:'rgba(25, 114, 120,0.7)'},
+    {id:6, value:"Medical",label:"Medical",color:'rgba(219,112,147,0.2)',colorBorder:'rgba(219,112,147,1)',colorHover:'rgba(219,112,147,0.7)'},
+    {id:7, value:"Health",label:"Health",color:'rgba(165,102,131,0.2)',colorBorder:'rgba(165,102,131,1)',colorHover:'rgba(165,102,131,0.7)'},
+    {id:8, value:"Beauty",label:"Beauty",color:'rgba(238,146,90,0.2)',colorBorder:'rgba(238,146,90,1)',colorHover:'rgba(238,146,90,0.7)'},
+    {id:9, value:"Insurance",label:"Insurance",color:'rgba(160,186,209,0.2)',colorBorder:'rgba(160,186,209,1)',colorHover:'rgba(160,186,209,0.7)'},
+    {id:10, value:"Personal",label:"Personal",color:'rgba(73,116,169,0.2)',colorBorder:'rgba(73,116,169,1)',colorHover:'rgba(73,116,169,0.7)'},
+    {id:11, value:"Debt",label:"Debt",color:'rgba(177,9,103,0.2)',colorBorder:'rgba(177,9,103,1)',colorHover:'rgba177,9,103,0.7)'},
+    {id:12, value:"Retirement",label:"Retirement",color:'rgba(220,70,134,0.2)',colorBorder:'rgba(220,70,134,1)',colorHover:'rgba(220,70,134,0.7)'},
+    {id:13, value:"Savings",label:"Savings",color:'rgba(192,73,201,0.2)',colorBorder:'rgba(192,73,201,1)',colorHover:'rgba(192,73,201,0.7)'},
+    {id:14, value:"Education",label:"Education",color:'rgba(207,201,73,0.2)',colorBorder:'rgba(207,201,73,1)',colorHover:'rgba(207,201,73,0.7)'},
+    {id:15, value:"Giving",label:"Giving",color:'rgba(94,83,133,0.2)',colorBorder:'rgba(94,83,133,1)',colorHover:'rgba(94,83,133,0.7)'},
+    {id:16, value:"Taxes",label:"Taxes",color:'rgba(72,70,27,0.2)',colorBorder:'rgba(72,70,27,1)',colorHover:'rgba(72,70,27,0.7)'},
+    {id:17, value:"Investments",label:"Investments",color:'rgba(25,61,237,0.2)',colorBorder:'rgba(25,61,237,1)',colorHover:'rgba(25,61,237,0.7)'},
+    {id:18, value:"Hobbies",label:"Hobbies",color:'rgba(44,117,64,0.2)',colorBorder:'rgba(44,117,64,1)',colorHover:'rgba(44,117,64,0.7)'},
+    {id:19, value:"Pets",label:"Pets",color:'rgba(232,175,49,0.2)',colorBorder:'rgba(232,175,49,1)',colorHover:'rgba(232,175,49,0.7)'},
+    {id:20, value:"Other",label:"Other",color:'rgba(18,23,60,0.2)',colorBorder:'rgba(18,23,60,1)',colorHover:'rgba(18,23,60,0.7)'}
 ];
 
 export const subcategories = [
@@ -69,15 +69,22 @@ export const subcategories = [
     { id:40,parent:"Medical",value: 'General', label: 'General'},
     { id:41,parent:"Medical",value: 'Procedures', label: 'Procedures'},
     { id:42,parent:"Medical",value: 'Other', label: 'Other'},
-    
+        
+];
+export const monthLabels=["January","February","March","April","May","June","July", "August","September","October","November","December"];
+export const monthNames = [
+    {id:0, value:"January", label:"January", days:31 },
+    {id:1, value:"February", label:"February", days:28},
+    {id:2, value:"March", label:"March", days:31},
+    {id:3, value:"April", label:"April", days:30},
+    {id:4, value:"May", label:"May", days:31},
+    {id:5, value:"June", label:"June", days:30},
+    {id:6, value:"July", label:"July", days:31},
+    {id:7, value:"August", label:"August", days:31},
+    {id:8, value:"September", label:"September", days:30},
+    {id:9, value:"October", label:"October", days:31},
+    {id:10, value:"November", label:"November", days:30},
+    {id:11, value:"December", label:"December", days:31},
+    {id:12, value:"All", label:"All", days:0}
 
-
-
-
-    
-    
-    
-    
-   
-    
 ];
