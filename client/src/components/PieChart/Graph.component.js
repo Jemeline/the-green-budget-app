@@ -11,6 +11,7 @@ class Graph extends Component {
 			title:{
 				text: 'Stock price of ' + this.props.title
 			},
+			color: this.props.color,
 			axisX:{
 				valueFormatString: "DD MMM",
 				crosshair: {
@@ -62,7 +63,6 @@ class Graph extends Component {
 		
 		return (
 		<div>
-			<p>hello world</p>
 			<CanvasJSChart options = {options} 
 				/* onRef={ref => this.chart = ref} */
 			/>

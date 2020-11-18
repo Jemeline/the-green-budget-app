@@ -1,9 +1,11 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import Graph from '../PieChart/Graph.component';
+import MyStocks from '../StockCard/MyStocks'
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import Grid from '@material-ui/core/Grid'
 import tickers from './tickers.js';
+import '../../css/Stocks.css';
 require("dotenv").config();
 const alpha = require('alphavantage')({ key: process.env.REACT_APP_ALPHA_VANTAGE_API_KEY});
 
@@ -31,89 +33,6 @@ const graphData = [
   { x: new Date("2018-03-29"), y: 88.15}
 ];
 
-// const getStock = async ticker => {
-//   console.log("Getting data");
-//   try {
-//   const request = await fetch(`http://localhost:8080/stock`, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json"
-//     },
-
-//     body: JSON.stringify({
-//       ticker: ticker,
-//       type: "daily"
-//     })
-//   });
-// } catch(error) {
-//     console.log(error);
-// }
-
-//   // const data = await request.json();
-//   const data = 1;
-//   console.log(data);
-//   return data;
-// };
-
-
-
-
-// const getMultipleStocks = async tickersArray =>{
-//   const request = await fetch(`http://localhost:8080/stocks`, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json"
-//     },
-
-//     body: JSON.stringify({
-//       tickers: tickersArray,
-//       type: "daily"
-//     })
-//   });
-
-//   const data = await request.json();
-//   console.log(data);
-//   return data;
-// }
-
-// const getUnlimitedStocks = async tickersArray =>{
-//   const request = await fetch(`http://localhost:8080/stocks-unlimited`, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json"
-//     },
-
-//     body: JSON.stringify({
-//       tickers: tickersArray,
-//       type: "daily"
-//     })
-//   });
-
-//   const data = await request.json();
-//   console.log(data);
-//   return data;
-// }
-
-function getStocky(ticker) {
-  alpha.data.daily(ticker).then((data) => {
-  let points = [];
-  let times = data['Time Series (Daily)'];
-  for (const property in times) {
-    // console.log(property.toString());
-    // console.log(times[property]["4. close"]);
-    let obj = {
-      x: new Date(property.toString()),
-      y: parseFloat(times[property]["4. close"]) 
-    };
-    points.unshift(obj);
-  }
-  console.log('points');
-  console.log(points)
-  return points;
-  });
-}
-
-
 
 async function getStocks(ticker, thing) {
   let data = await alpha.data.daily(ticker);
@@ -132,24 +51,40 @@ async function getStocks(ticker, thing) {
   return points;
 }
 
-
+function getintraday(ticker) {
+  alpha.data.intraday(ticker).then((data) => {
+    console.log(data);
+  })
+}
 
 
 class Stocks extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
-    this.handleGraphClick = this.handleGraphClick.bind(this);
+    this.state = {myStocks: ['CVS', 'XOM', 'AAPL']};
+    this.handleSelectChange = this.handleSelectChange.bind(this);
     this.handleStockClick = this.handleStockClick.bind(this);
+    this.handleAddStock = this.handleAddStock.bind(this);
   }
 
-  handleGraphClick() {
-
+  handleSelectChange(e) {
+    console.log('selectchange');
+    this.setState({tickerValue: e.target.value})
   }
 
   handleStockClick() {
+    console.log('clicked')
     let ticker = document.getElementsByClassName('tickerinput')[0].value;
     getStocks(ticker, this);
+    getintraday(ticker);
+  }
+
+  handleAddStock() {
+    console.log('addstock')
+    let ticker = document.getElementsByClassName('tickerinput')[0].value;
+    if (ticker) {
+      this.setState({myStocks: this.state.myStocks.concat(ticker)})
+    }
   }
 
   printInfo() {
@@ -157,40 +92,60 @@ class Stocks extends React.Component {
   }
 
   render() {
-    if (!this.state.graphData) {
+    if (!this.state.ticker) {
       return (
+        <Grid container>
+        <Grid className='leftgrid' item xs={6}>
+        <h1 className='myStocks'>Stock Search</h1>
+        <Autocomplete
+        className='tickerselect'
+        options={tickers}
+        getOptionLabel={(option) => option.company}
+        style={{ width: 300 }}
+        onChange={this.handleSelectChange}
+        renderInput={(params) => <TextField  value={this.state.tickerValue} className='tickertext' {...params} label="Stock Finder" variant="outlined" />}
+      />
+        
+        <textarea className='tickerinput'>ticker input</textarea>
         <div>
-        <h2>loading...</h2>
-        <Autocomplete
-  className='tickerselect'
-  options={tickers}
-  getOptionLabel={(option) => option.company}
-  style={{ width: 300 }}
-  renderInput={(params) => <TextField {...params} label="Stock Finder" variant="outlined" />}
-/>
-        <textarea className='tickerinput'>ticker input</textarea>
-        <button onClick={() => this.handleStockClick()}>Get stock</button>
+        <button className='stockbutton' onClick={() => this.handleAddStock()}>Add to My Stocks</button>
+        <button className='stockbutton' onClick={() => this.handleStockClick()}>Get stock</button>
         </div>
+        </Grid>
+        <Grid className={"flex-col-scroll"} item xs={6}>
+          <h1 className='myStocks'>My Stocks</h1>
+          <MyStocks myStocks={this.state.myStocks}/>
+        </Grid>
+      </Grid>
       )
-    } else {
+    }
     return (
-      <div>
-        <h2>Stocks</h2>
+      <Grid container>
+        <Grid className='leftgrid' item xs={6}>
+        <h1 className='myStocks'>Stock Search</h1>
         <Autocomplete
-  className='tickerselect'
-  options={tickers}
-  getOptionLabel={(option) => option.company}
-  style={{ width: 300 }}
-  renderInput={(params) => <TextField {...params} label="Stock Finder" variant="outlined" />}
-/>
+        className='tickerselect'
+        options={tickers}
+        getOptionLabel={(option) => option.company}
+        style={{ width: 300 }}
+        onChange={this.handleSelectChange}
+        renderInput={(params) => <TextField  value={this.state.tickerValue} className='tickertext' {...params} label="Stock Finder" variant="outlined" />}
+      />
+        
         <textarea className='tickerinput'>ticker input</textarea>
-        <button onClick={() => this.handleStockClick()}>Get stock</button>
-        <Graph title={this.state.ticker} data={this.state.graphData} />
-        {/* <button onClick={() => getMultipleStocks(['AAPL', 'MSFT', 'TQQQ'], 'daily')}>Get multiple stocks</button>
-        <button onClick={() => getUnlimitedStocks(['AAPL', 'MSFT', 'TQQQ', 'TLT', 'DIA', 'SPY', ],'daily')}>Get unlimited stocks in 12 seconds X #of Stocks</button> */}
-      </div>
+        <div>
+        <button className='stockbutton' onClick={() => this.handleAddStock()}>Add to My Stocks</button>
+        <button className='stockbutton' onClick={() => this.handleStockClick()}>Get stock</button>
+        </div>
+        <Graph className='searchGraph' color={'#6b9c32'} title={this.state.ticker} data={this.state.graphData} />
+        </Grid>
+        <Grid className={"flex-col-scroll"} item xs={6}>
+          <h1 className='myStocks'>My Stocks</h1>
+          <MyStocks myStocks={this.state.myStocks}/>
+        </Grid>
+      </Grid>
     );
   }
 }
-}
+// }
 export default Stocks;
