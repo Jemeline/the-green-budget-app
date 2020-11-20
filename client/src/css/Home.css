@@ -1,0 +1,49 @@
+body, html {
+    height: 100%;
+    margin: 0;
+  }
+
+img#homeImage{
+  height: 70%;
+  width: 100%;
+
+  position: center;
+  size: cover;
+}
+
+h2{
+  color: #FFC857;
+}
+
+img.card-img-top{
+  align-self: center;
+  width: 100px;
+  height: 100px;
+}
+
+.card{
+  border: 1px solid darkgrey;
+  margin: 10px;
+}
+
+.card:hover{
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.card-body {
+  margin: 15%;
+}
+
+.btn-outline-secondary{
+  background-color: white;
+  color: #412234;
+  font-size: 16pt;
+  margin: 10px;
+  margin-bottom: 25px;
+}
+
+.btn-outline-secondary:hover{
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+

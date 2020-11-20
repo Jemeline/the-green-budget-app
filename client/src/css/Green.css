@@ -1,0 +1,135 @@
+html{
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  height: 100%;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+
+.half{
+  float: left;
+  width: 50%;
+}
+
+.iconRow{
+  overflow: scroll;
+  height: 75vh;
+}
+
+/* Clear floats after the columns */
+.iconRow:after {
+  content: "";
+  display: flex;
+  flex-wrap: wrap;
+  clear: both;
+}
+
+.icon{
+  margin: 20px;
+  transition: transform .2s;
+}
+
+.circle {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 15px;
+}
+
+.btn-circle.btn-xl { 
+  /* background-image: url("https://homepages.cae.wisc.edu/~ece533/images/airplane.png"); */
+  /* background: no-repeat url("../emojis/gas.png");  */
+  width: 70px; 
+  height: 70px; 
+  padding: 5px 5px; 
+  border-radius: 35px;
+  border: none; 
+  font-size: 12px; 
+  text-align: center; 
+  background-position: center;
+  background-size: cover; 
+  background-origin: content-box;
+} 
+
+.icon:hover { 
+  transform: scale(1.5);
+}
+
+.iconText {
+    width: 70px;
+    overflow-y: inherit;
+}
+
+.card{
+  /* margin-top: 20px; */
+  margin-bottom: 20px;
+  background-color: rgb(153, 184, 194);
+  padding: 20px;
+  text-align: left;
+}
+
+h1 {
+  margin: 60px;
+  color: #2B9C32;
+}
+
+/* colors:
+.text-primary = 5CA5BD
+.text-secondary = 412234
+.text-success = 2B9C32
+.text-info = FFC857
+*/
+
+.height-full {
+  height: 75vh;
+}
+
+.is-vcentered {
+    display: flex;
+    align-items: center;  
+    justify-content: center;
+} 
+
+#infolabel{
+    font-size: 30px;
+    color: grey;
+    font-weight: bold;
+}
+
+.fill {
+    margin-top: 0px;
+    height: 100%;
+    width: 100%;
+}
+
+.iconImage {
+    width: 50px; 
+    height: 50px; 
+}
+
+.logo {
+  height: 60px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+eainfo{
+  height: 60px;
+  line-height: 60px;
+}
+

@@ -44,6 +44,9 @@ textarea {
     border-radius: 20px;
     width: 40%;
     margin-top: 8px;
+    white-space: normal;
+    text-align: justify;
+    text-align-last: center;
 }
 
 .flex-col-scroll {

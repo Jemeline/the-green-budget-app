@@ -1,6 +1,7 @@
 const routes = require('express').Router();
-const users = require('./users')
-const expenses = require('./expenses')
+const users = require('./users');
+const expenses = require('./expenses');
+const income = require('./income');
 const generateToken = require('./generateToken.js');
 
 
@@ -30,6 +31,19 @@ routes.use('/users',users);
         // 'api/expenses/delete-expense': delete expense from db
         // 'api/expenses/delete-expenses': delete all expenses by user from db     
 routes.use('/expenses',expenses);
+
+// Income endpoints:
+    // CREATE
+       // 'api/income/create-income': add new income to db 
+    // READ
+        // '/api/income/': get all registered income
+        // '/api/income/read-income': lookup single users' income
+    // UPDATE
+        // '/api/income/update-income': update income
+    // DELETE
+        // 'api/income/delete-incomes': delete income from db
+        // 'api/income/delete-income-user': delete all income by user from db     
+routes.use('/income',income);
 
 // Check if api is working
 routes.get('/', (req, res) => {
