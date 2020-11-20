@@ -1,6 +1,34 @@
-import {generateToken,getBudgetData} from '../../utils/apiCalls';
+import {generateToken,getBudgetData,getIncomeData} from '../../utils/apiCalls';
 import {transformBudgetData, generateBudgetDataPayload} from "../Budget/BudgetUtils.js";
 import {getUser} from '../../utils/common';
+import {transformIncomeData, generateIncomeDataPayload} from "../Income/IncomeUtils.js";
+
+
+export async function getChartIncomeData(year, month){
+    try {
+        if(getUser()){
+            const token = await generateToken(getUser());
+            const payload = generateIncomeDataPayload(token);
+            const data = await getIncomeData(payload.body,payload.headers);
+            const transformedData = transformIncomeData(data);
+            const transformDate= transformedData.map(function(item){return {date:new Date(item[2]),category:item[3],cost:item[5]}});
+            const filteredByYear = transformDate.filter(function(ele){
+                return ele.date.getFullYear()===year;
+            });
+            if (month == 12) return filteredByYear;
+            else {
+                const filteredByMonth = filteredByYear.filter(function(ele){
+                    return ele.date.getMonth()===month;
+                })
+                return filteredByMonth;
+            }
+        } else {
+            return null;    
+        }
+    }catch (error){
+        throw error;
+    }
+};
 
 export async function getChartData(year, month){
     try {

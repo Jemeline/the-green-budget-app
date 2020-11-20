@@ -51,8 +51,6 @@ class Header extends Component {
     </NavbarBrand>
     <NavbarCollapse className="order-1 order-md-0">
     <Nav className= "mr-auto order-2 ">
-    <NavLink id="nav-custom" as={Link} to="/about">About</NavLink>
-    <NavLink id="nav-custom" as={Link} to="/contact">Contact Us</NavLink>
     <NavLink id="nav-custom" as={Link} hidden={this.state.userIsActive} to="/dashboard">Dashboard</NavLink> 
     <NavLink id="nav-custom" as={Link} hidden={this.state.adminIsActive} to="/admin">Admin</NavLink>
       
@@ -62,11 +60,7 @@ class Header extends Component {
     <NavDropdown id="nav-dropdown" hidden={this.state.userIsActive} title={"Welcome, " + capitalizeFirst(sessionStorage.getItem('name'))+ "  "}>
         <NavDropdown.Item as={Link} to="/budget">Budget</NavDropdown.Item>
         <NavDropdown.Item as={Link} to="/income">Income</NavDropdown.Item>
-        <NavDropdown.Item>Something</NavDropdown.Item>
         <NavDropdown.Item as={Link} to="/green">Green</NavDropdown.Item>
-        <NavDropdown.Item>Another action</NavDropdown.Item>
-        <NavDropdown.Divider />
-        <NavDropdown.Item>Separated link</NavDropdown.Item>
     </NavDropdown>
     <Button as={Link} id="nav-custom" variant="outline-primary"hidden={this.state.userIsActive} to="/login" onClick={() => {handleLogout()}}>Logout</Button>
     </Navbar>

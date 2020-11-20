@@ -7,6 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import {Container} from 'reactstrap';
 import {generateIncomeDataPayload} from "./Income/IncomeUtils.js";
 import {getIncomeData} from '../utils/apiCalls';
+import LineChart from './Charts/LineChart.component';
 
 
 
@@ -49,25 +50,24 @@ class Dashboard extends Component {
             <div >
                 <Container fluid={true}>
                     <br></br>
-                    <Grid container spacing={3}>
+                    <Grid container spacing={4}>
                         <Grid item xs={2}>
                             <div onClick={() => { this.props.history.push('/budget')}} style={{cursor: 'pointer'}}>
                                 <MonthlyExpenses data={this.state.dataExpenses} goals={this.state.goals} />
                             </div>
-                        </Grid>
-                        <Grid item xs={2}>
+                            <br></br>
+                            <br></br>
                             <div onClick={() => { this.props.history.push('/income')}} style={{cursor: 'pointer'}}>
                                 <MonthlyIncome data={this.state.dataIncome} goals={this.state.goals} />
                             </div>
+                            <br></br>
+                            <br></br>
+                                <MonthlySavingsRate income={this.state.dataIncome} expenses={this.state.dataExpenses} goals={this.state.goals} />
                         </Grid>
-                        <Grid item xs={2}>
-                            <MonthlySavingsRate income={this.state.dataIncome} expenses={this.state.dataExpenses} goals={this.state.goals} />
-                        </Grid>
-                        <Grid item xs={2}>
-                            <MonthlyDifferences income={this.state.dataIncome} expenses={this.state.dataExpenses} goals={this.state.goals} />
-                        
-                        </Grid>
-                    </Grid>
+                        <Grid item xs={10}>
+                            <LineChart/>
+                        </Grid> 
+                    </Grid> 
                 </Container>
             </div> 
         )};

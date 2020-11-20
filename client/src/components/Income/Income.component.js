@@ -234,7 +234,7 @@ class Income extends Component {
                 <Button outline color="info" hidden={!this.state.hiddenButtons} onClick={async () => {await this.handleSubmit('add');}}>Add</Button>{' '}
                 <Button outline color="info" hidden={this.state.hiddenButtons} onClick={async () => {await this.handleSubmit('update');}}>Update</Button>{' '}
                 <Button outline color="danger" hidden={this.state.hiddenButtons} onClick={async () => {await this.handleSubmit('delete');}}>Delete</Button>{' '}
-                <Button outline color="secondary" onClick={this.toggle}>Cancel</Button>
+                <Button outline color="primary" onClick={this.toggle}>Cancel</Button>
                 </ModalFooter>
             </Modal>
             </div>
