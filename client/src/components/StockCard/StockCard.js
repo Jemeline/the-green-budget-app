@@ -10,15 +10,12 @@ async function getStocks(ticker, thing) {
     let points = [];
     let times = data['Time Series (Daily)'];
     for (const property in times) {
-      // console.log(property.toString());
-      // console.log(times[property]["4. close"]);
       let obj = {
         x: new Date(property.toString()),
         y: parseFloat(times[property]["4. close"]) 
       };
       points.unshift(obj);
     }
-    console.log(points);
     thing.setState({graphData: points, ticker: ticker})
     return points;
   }
@@ -27,13 +24,20 @@ async function getStocks(ticker, thing) {
 class StockCard extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {visible: true}
         getStocks(this.props.ticker, this)
+        this.removeStock = this.removeStock.bind(this);
+    }
+
+    removeStock() {
+      this.setState({visible: false});
     }
     
 
     render() {
-        if(!this.state.ticker) {
+      if (!this.state.visible) {
+        return null;
+      } else if(!this.state.ticker) {
             return (
                 <div>
                 <h2>loading...</h2>
@@ -43,6 +47,7 @@ class StockCard extends React.Component {
         return (
             <div className='mystock'>
            <Graph className={'mystockgraph'} color={'#412234'}title={this.state.ticker} data={this.state.graphData} />
+           <button onClick={() => this.removeStock()}>Remove</button>
            </div>
         )
     }
