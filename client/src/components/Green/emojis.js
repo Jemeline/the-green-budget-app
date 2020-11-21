@@ -22,9 +22,26 @@ import Malaria from './emojis/Malaria.png';
 import OneAcreFund from './emojis/OneAcreFund.png';
 import Deworm from './emojis/Deworm.png';
 
+import Phone from './emojis/Phone.png';
+import Children from './emojis/Children.png';
+import Groceries from './emojis/Groceries.png';
+import PetFood from './emojis/PetFood.png';
+import Emergency from './emojis/Emergency.png';
+import Restaurants from './emojis/Restaurants.png';
+import Electricity from './emojis/Electricity.png';
+import Shoes from './emojis/Shoes.png';
+
+import Water from './emojis/Water.png';
+import Dating from './emojis/Dating.png';
+import Garbage from './emojis/Garbage.png';
+import General from './emojis/General.png';
+import Wifi from './emojis/Wifi.png';
+
 
 let images = {Transportation, Food, Utilities, Social, Clothing, Medical, 
 Health, Beauty, Insurance, Personal, Debt, Retirement, Savings, Education, 
-Giving, Taxes, Investments, Hobbies, Pets, Other, Malaria, OneAcreFund, Deworm}
+Giving, Taxes, Investments, Hobbies, Pets, Other, Malaria, OneAcreFund, Deworm, 
+Phone, Groceries, Children, PetFood, Emergency, Restaurants, Electricity,
+Shoes, Water, Dating, Garbage, General, Wifi}
 
 export default images;
