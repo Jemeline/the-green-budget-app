@@ -61,6 +61,7 @@ class Header extends Component {
         <NavDropdown.Item as={Link} to="/budget">Budget</NavDropdown.Item>
         <NavDropdown.Item as={Link} to="/income">Income</NavDropdown.Item>
         <NavDropdown.Item as={Link} to="/green">Green</NavDropdown.Item>
+        <NavDropdown.Item as={Link} to="/stocks">Stocks</NavDropdown.Item>
     </NavDropdown>
     <Button as={Link} id="nav-custom" variant="outline-primary"hidden={this.state.userIsActive} to="/login" onClick={() => {handleLogout()}}>Logout</Button>
     </Navbar>

@@ -28,7 +28,7 @@ function Fact({subcategory}) {
     let e = information.filter(e => e.subcategory === subcategory);
     console.log(e)
     return (
-        <Card>
+        <Card className="green-card">
             <p> <strong> Did You Know? </strong> </p>
             <p>
             {e[0].fact}

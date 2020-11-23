@@ -33,7 +33,7 @@ export const MonthlyExpenses = (props) => {
                         <strong>{'$'+thisMonthExpenses.toFixed(2).toString()}</strong>
                     </Typography>
                     <br></br>
-                    <Chip className="expense-chip" color="primary" style={{backgroundColor:'#009ffd',cursor:"pointer"}} label={'$'+Math.abs(differenceExpenses).toString()+ " from last month" } icon={getIcon(differenceExpenses)} />
+                    <Chip className="expense-chip" color="primary" style={{backgroundColor:'#009ffd',cursor:"pointer"}} label={'$'+Math.abs(differenceExpenses).toString()} icon={getIcon(differenceExpenses)} />
                     </CardContent>
             </Card>
         </div>
@@ -61,7 +61,7 @@ export const MonthlyIncome = (props) => {
                         <strong>{'$'+thisMonthIncome.toFixed(2).toString()}</strong>
                     </Typography>
                     <br></br>
-                    <Chip className="expense-chip" color="primary" style={{ backgroundColor:"#3eadcf",cursor:"pointer"}} label={'$'+Math.abs(differenceIncome).toString()+ " from last month" } icon={getIcon(differenceIncome)} />
+                    <Chip className="expense-chip" color="primary" style={{ backgroundColor:"#3eadcf",cursor:"pointer"}} label={'$'+Math.abs(differenceIncome).toString()} icon={getIcon(differenceIncome)} />
                     </CardContent>
             </Card>
         </div>
@@ -90,25 +90,32 @@ function getColor(value){
 
 export const MonthlySavingsRate = (props) => {
     const date = new Date();
-    const thisMonthExpenses = props.expenses
-        .filter(entry=>entry.date.slice(0,4)===date.getFullYear().toString() && entry.date.slice(5,7)===(date.getMonth()+1).toString())
-        .map(item => item.amount)
-        .reduce((prev, curr) => prev + curr, 0);
-    const thisMonthIncome = props.income
-        .filter(entry=>entry.date.slice(0,4)===date.getFullYear().toString() && entry.date.slice(5,7)===(date.getMonth()+1).toString())
-        .map(item => item.amount)
-        .reduce((prev, curr) => prev + curr, 0);
-    const thisMonthSavingsRate = ((1-thisMonthExpenses/thisMonthIncome)*100).toFixed(2);
-    const lastMonthExpenses = props.expenses
-        .filter(entry=>entry.date.slice(0,4)===date.getFullYear().toString() && entry.date.slice(5,7)===(date.getMonth()).toString())
-        .map(item => item.amount)
-        .reduce((prev, curr) => prev + curr, 0);
-    const lastMonthIncome = props.income
-        .filter(entry=>entry.date.slice(0,4)===date.getFullYear().toString() && entry.date.slice(5,7)===(date.getMonth()).toString())
-        .map(item => item.amount)
-        .reduce((prev, curr) => prev + curr, 0);
-    const lastMonthSavingsRate = ((1-lastMonthExpenses/lastMonthIncome)*100).toFixed(2);
-    const differenceSavingsRate = (thisMonthSavingsRate - lastMonthSavingsRate).toFixed(2);
+    let differenceSavingsRate;
+    let thisMonthSavingsRate;
+    if (props.expenses.length !== 0 && props.expense.length !== 0){
+        const thisMonthExpenses = props.expenses
+            .filter(entry=>entry.date.slice(0,4)===date.getFullYear().toString() && entry.date.slice(5,7)===(date.getMonth()+1).toString())
+            .map(item => item.amount)
+            .reduce((prev, curr) => prev + curr, 0);
+        const thisMonthIncome = props.income
+            .filter(entry=>entry.date.slice(0,4)===date.getFullYear().toString() && entry.date.slice(5,7)===(date.getMonth()+1).toString())
+            .map(item => item.amount)
+            .reduce((prev, curr) => prev + curr, 0);
+        thisMonthSavingsRate = ((1-thisMonthExpenses/thisMonthIncome)*100).toFixed(2);
+        const lastMonthExpenses = props.expenses
+            .filter(entry=>entry.date.slice(0,4)===date.getFullYear().toString() && entry.date.slice(5,7)===(date.getMonth()).toString())
+            .map(item => item.amount)
+            .reduce((prev, curr) => prev + curr, 0);
+        const lastMonthIncome = props.income
+            .filter(entry=>entry.date.slice(0,4)===date.getFullYear().toString() && entry.date.slice(5,7)===(date.getMonth()).toString())
+            .map(item => item.amount)
+            .reduce((prev, curr) => prev + curr, 0);
+        const lastMonthSavingsRate = ((1-lastMonthExpenses/lastMonthIncome)*100).toFixed(2);
+        differenceSavingsRate = (thisMonthSavingsRate - lastMonthSavingsRate).toFixed(2);
+    } else {
+        differenceSavingsRate = 0;
+        thisMonthSavingsRate = 0;
+    }
     return (
         <div>
             <Card className="savingsRate-card" style={{backgroundColor:'#A6D785',borderRadius:"15%"}}>
@@ -118,7 +125,7 @@ export const MonthlySavingsRate = (props) => {
                         <strong>{thisMonthSavingsRate.toString()+'%'}</strong>
                     </Typography>
                     <br></br>
-                    <Chip className="expense-chip" color="primary" style={{ backgroundColor:"#9795ef",cursor:"pointer"}} label={Math.abs(differenceSavingsRate).toString()+ "% from last month" } icon={getIcon(differenceSavingsRate)} />
+                    <Chip className="expense-chip" color="primary" style={{ backgroundColor:"#9795ef",cursor:"pointer"}} label={Math.abs(differenceSavingsRate).toString()+ "%" } icon={getIcon(differenceSavingsRate)} />
                     </CardContent>
             </Card>
         </div>

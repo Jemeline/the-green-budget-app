@@ -50,7 +50,7 @@ class Dashboard extends Component {
             <div >
                 <Container fluid={true}>
                     <br></br>
-                    <Grid container spacing={4}>
+                    <Grid container justify="center" spacing={4}>
                         <Grid item xs={2}>
                             <div onClick={() => { this.props.history.push('/budget')}} style={{cursor: 'pointer'}}>
                                 <MonthlyExpenses data={this.state.dataExpenses} goals={this.state.goals} />
@@ -64,7 +64,7 @@ class Dashboard extends Component {
                             <br></br>
                                 <MonthlySavingsRate income={this.state.dataIncome} expenses={this.state.dataExpenses} goals={this.state.goals} />
                         </Grid>
-                        <Grid item xs={10}>
+                        <Grid item xs={9}>
                             <LineChart/>
                         </Grid> 
                     </Grid> 

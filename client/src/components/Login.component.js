@@ -96,10 +96,7 @@ class Login extends Component {
     render() {
         return (
             <div>
-            <h4>Login</h4>
-            <p>This is my Login Page.</p>
-    
-            <Container style={{width:"50%"}}>
+            <Container style={{width:"50%",position:"absolute",top: "25%", bottom: 0, left: 0, right: 0,margin: "auto"}} >
                 <Row>
                     <Col>
                         <Card>

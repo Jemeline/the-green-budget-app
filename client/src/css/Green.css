@@ -75,7 +75,7 @@ code {
     overflow-y: inherit;
 }
 
-.card{
+.green-card{
   /* margin-top: 20px; */
   margin-bottom: 20px;
   background-color: rgb(153, 184, 194);
