@@ -8,7 +8,7 @@ import tickers from './tickers.js';
 import '../../css/Stocks.css';
 require("dotenv").config();
 const alpha = require('alphavantage')({ key: process.env.REACT_APP_ALPHA_VANTAGE_API_KEY});
-
+const strippedTickers = tickers.map((ele) => ele.company.slice(-5).split(",").pop().trim())
 
 
 async function getStocks(ticker, thing) {
@@ -30,10 +30,17 @@ async function getStocks(ticker, thing) {
 class Stocks extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {myStocks: ['CVS', 'XOM', 'AAPL']};
+    this.state = {
+      myStocks: ['CVS', 'XOM', 'AAPL'],
+      tickerAutocomplete:'',
+      divAutocomplete:"",
+      timestamp:new Date().getTime()
+    };
     this.handleSelectChange = this.handleSelectChange.bind(this);
     this.handleStockClick = this.handleStockClick.bind(this);
     this.handleAddStock = this.handleAddStock.bind(this);
+    this.handleTicker = this.handleTicker.bind(this);
+    this.onEnter = this.onEnter.bind(this);
   }
 
   handleSelectChange(e) {
@@ -41,70 +48,128 @@ class Stocks extends React.Component {
   }
 
   handleStockClick() {
-    let ticker = document.getElementsByClassName('tickerinput')[0].value;
-    getStocks(ticker, this);
+    getStocks(this.state.tickerAutocomplete, this);
   }
 
   handleAddStock() {
-    let ticker = document.getElementsByClassName('tickerinput')[0].value;
-    if (ticker) {
-      this.setState({myStocks: this.state.myStocks.concat(ticker)})
+    if (this.state.tickerAutocomplete) {
+      this.setState({myStocks: this.state.myStocks.concat(this.state.tickerAutocomplete)})
     }
+  }
+  handleTicker(event){
+      this.setState({divAutocomplete:""});
+      this.setState({tickerAutocomplete:(event.target.value).toUpperCase()});
+      const time = new Date().getTime();
+      if (time - this.state.timestamp >= 250){
+        const suggestion = this.autocomplete(event.target.value);
+        if (suggestion.length > 0 && event.target.value){
+          this.setState({divAutocomplete:suggestion[0]});
+          this.setState({timestamp:new Date().getTime()})
+        }
+      }
+  }
+
+  onEnter(event){
+    if(event.charCode === 13){
+      this.setState({tickerAutocomplete:this.state.divAutocomplete, divAutocomplete:''});
+    }
+  }
+
+  autocomplete(value){
+    console.log(strippedTickers);
+    let s = strippedTickers.filter(ele => ele.toUpperCase().startsWith(value.toUpperCase()));
+    return s;
   }
 
   render() {
     if (!this.state.ticker) {
       return (
+        <div>
+        
+     
         <Grid container>
         <Grid className='leftgrid' item xs={6}>
-        <h1 className='myStocks'>Stock Search</h1>
+        <br></br>
+        <h1 style={{left:"10px", position:"absolute"}} className='myStocks'>Stock Search</h1>
+        <br></br>
+        <br></br>
+        <br></br>
+        
         <Autocomplete
         className='tickerselect'
         options={tickers}
         getOptionLabel={(option) => option.company}
-        style={{ width: 300 }}
+        style={{ width: 300, left:"10px", position:"absolute"}}
         onInputChange={this.handleSelectChange}
         renderInput={(params) => <TextField  value={this.state.tickerValue} className='tickertext' {...params} label="Stock Finder" variant="outlined" />}
       />
+      
+      <br></br>
+      <br></br>
+      <br></br>
         
-        <textarea className='tickerinput'>ticker input</textarea>
+      <div id="search_container">
+          <div id="autocomplete">{this.state.divAutocomplete}</div>
+            <input id="search_" type="text" value={this.state.tickerAutocomplete} placeholder="Input Ticker" onKeyPress={this.onEnter} onChange={this.handleTicker}/>
+      </div>
+      <br></br>
+      <br></br>
         <div>
-        <button className='stockbutton' onClick={() => this.handleAddStock()}>Add to My Stocks</button>
-        <button className='stockbutton' onClick={() => this.handleStockClick()}>View Stock Graph</button>
+        <button className='stockbutton' style={{left:"10px", position:"absolute"}} onClick={() => this.handleAddStock()}>Add to My Stocks</button>
+        
         </div>
         </Grid>
         <Grid className={"flex-col-scroll"} item xs={6}>
+        <br></br>
           <h1 className='myStocks'>My Stocks</h1>
           <MyStocks parentState={this.state} myStocks={this.state.myStocks}/>
         </Grid>
       </Grid>
+      </div>
       )
     }
     return (
+      <div>
+        
+        
       <Grid container>
-        <Grid className='leftgrid' item xs={6}>
+        <Grid style={{left:"10px", position:"absolute"}} className='leftgrid' item xs={6}>
+        <br></br>
         <h1 className='myStocks'>Stock Search</h1>
+        <br></br>
+        <br></br>
+        <br></br>
+        
         <Autocomplete
         className='tickerselect'
         options={tickers}
         getOptionLabel={(option) => option.company}
-        style={{ width: 300 }}
+        style={{ width: 300, left:"10px", position:"absolute"}}
         onInputChange={this.handleSelectChange}
         renderInput={(params) => <TextField  value={this.state.tickerValue} className='tickertext' {...params} label="Stock Finder" variant="outlined" />}
       />
-        
-        <textarea className='tickerinput'>enter stock ticker here</textarea>
+      <br></br>
+      <br></br>
+      <br></br>
+        <div id="search_container">
+          <div id="autocomplete">{this.state.divAutocomplete}</div>
+            <input id="search_" value={this.state.tickerAutocomplete} type="text" placeholder="Input Ticker" onChange={this.handleTicker}/>
+          </div>
+          <br></br>
+          <br></br>
         <div>
-        <button className='stockbutton' onClick={() => this.handleAddStock()}>Add to My Stocks</button>
-        <button className='stockbutton' onClick={() => this.handleStockClick()}>View Stock Graph</button>
+        <button className='stockbutton' style={{left:"10px", position:"absolute"}} onClick={() => this.handleAddStock()}>Add to My Stocks</button>
+        
         </div>
         <Graph className='searchGraph' color={'#6b9c32'} title={this.state.ticker} data={this.state.graphData} />
         </Grid>
         <Grid className={"flex-col-scroll"} item xs={6}>
+        <br></br>
           <h1 className='myStocks'>My Stocks</h1>
           <MyStocks parentState={this.state} myStocks={this.state.myStocks}/>
         </Grid>
       </Grid>
+      </div>
     );
   }
 }
