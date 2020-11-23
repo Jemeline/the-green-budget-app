@@ -69,7 +69,7 @@ export function generateDeleteIncomePayload(state,token){
       body: 
       {
         sessionUser:getUser(),
-        incomeID:state.budgetId
+        incomeID:state.incomeId
       },
       headers: {
         headers: {

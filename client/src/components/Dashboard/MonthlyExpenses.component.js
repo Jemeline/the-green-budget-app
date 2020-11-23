@@ -90,9 +90,6 @@ function getColor(value){
 
 export const MonthlySavingsRate = (props) => {
     const date = new Date();
-    let differenceSavingsRate;
-    let thisMonthSavingsRate;
-    if (props.expenses.length !== 0 && props.expense.length !== 0){
         const thisMonthExpenses = props.expenses
             .filter(entry=>entry.date.slice(0,4)===date.getFullYear().toString() && entry.date.slice(5,7)===(date.getMonth()+1).toString())
             .map(item => item.amount)
@@ -101,7 +98,12 @@ export const MonthlySavingsRate = (props) => {
             .filter(entry=>entry.date.slice(0,4)===date.getFullYear().toString() && entry.date.slice(5,7)===(date.getMonth()+1).toString())
             .map(item => item.amount)
             .reduce((prev, curr) => prev + curr, 0);
-        thisMonthSavingsRate = ((1-thisMonthExpenses/thisMonthIncome)*100).toFixed(2);
+        let thisMonthSavingsRate;
+            if (thisMonthIncome === 0){
+            thisMonthSavingsRate = 0;
+        } else {
+            thisMonthSavingsRate = ((1-thisMonthExpenses/thisMonthIncome)*100).toFixed(2);
+        }
         const lastMonthExpenses = props.expenses
             .filter(entry=>entry.date.slice(0,4)===date.getFullYear().toString() && entry.date.slice(5,7)===(date.getMonth()).toString())
             .map(item => item.amount)
@@ -110,12 +112,14 @@ export const MonthlySavingsRate = (props) => {
             .filter(entry=>entry.date.slice(0,4)===date.getFullYear().toString() && entry.date.slice(5,7)===(date.getMonth()).toString())
             .map(item => item.amount)
             .reduce((prev, curr) => prev + curr, 0);
-        const lastMonthSavingsRate = ((1-lastMonthExpenses/lastMonthIncome)*100).toFixed(2);
-        differenceSavingsRate = (thisMonthSavingsRate - lastMonthSavingsRate).toFixed(2);
-    } else {
-        differenceSavingsRate = 0;
-        thisMonthSavingsRate = 0;
-    }
+        let lastMonthSavingsRate;
+        if (thisMonthIncome === 0){
+            lastMonthSavingsRate = 0;
+        } else {
+            lastMonthSavingsRate = ((1-thisMonthExpenses/thisMonthIncome)*100).toFixed(2);
+        }
+        const differenceSavingsRate = (thisMonthSavingsRate - lastMonthSavingsRate).toFixed(2);
+        
     return (
         <div>
             <Card className="savingsRate-card" style={{backgroundColor:'#A6D785',borderRadius:"15%"}}>

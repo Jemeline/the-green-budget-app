@@ -29,7 +29,6 @@ class Income extends Component {
             alertColor:'danger',
             loading:'true',
             incomeId:0,
-            newUser:false,
             modalFilter:false,
 
         }; 
@@ -49,14 +48,14 @@ class Income extends Component {
         this.setState({ [event.target.name]:event.target.value});
     };
     toggle() {
-        if (!this.state.newUser){
+        
             this.setState({
                 modal:!this.state.modal,
                 hiddenButtons:!this.hiddenButtons,
             });
             this.clearFormFields();
             this.onDismiss();
-        }
+        
     };
     clearFormFields(){
         this.setState({description:'',amount:'',category:null,date:'',incomeId:0 });
@@ -85,20 +84,17 @@ class Income extends Component {
                         data = await updateIncomeItem(payload.body,payload.headers);
                     } else {
                         const payload = generateDeleteIncomePayload(this.state,token);
+                        console.log(payload);
                         data = await removeIncomeItem(payload.body,payload.headers);
                     };
                     if (!data){
                         this.handleAlert("Oops... Something Went Wrong");
                     } else {
                         if(type ==="add"){
-                            if (this.state.newUser){
-                                this.setState({newUser:false});
-                                this.clearFormFields();
-                                this.handleAlert("Great! Add another entry or click close to see your income.",'success');    
-                            } else {
+                            
                                 this.handleAlert("Success",'success');
                                 this.clearFormFields();   
-                            }    
+                              
                         } else {
                             this.toggle();
                         };  
@@ -125,9 +121,8 @@ class Income extends Component {
             const transformedData = transformIncomeData(data);
             shiftIncomeData(transformedData);
             if (transformedData.length === 0){
-                this.setState({ income: transformedData, loading:'complete',modal:true,newUser:true, hiddenButtons:true });
-                this.handleAlert("Welcome " +capitalizeFirst(getName())+", add an entry to begin your journey with Green Financing.",'success');
-            } else {
+                this.setState({ income: transformedData, loading:'complete',modal:true,hiddenButtons:true });
+                } else {
                 this.setState({ income: transformedData, loading:'complete' });
             }
         } else {
@@ -234,7 +229,8 @@ class Income extends Component {
                 <Button outline color="info" hidden={!this.state.hiddenButtons} onClick={async () => {await this.handleSubmit('add');}}>Add</Button>{' '}
                 <Button outline color="info" hidden={this.state.hiddenButtons} onClick={async () => {await this.handleSubmit('update');}}>Update</Button>{' '}
                 <Button outline color="danger" hidden={this.state.hiddenButtons} onClick={async () => {await this.handleSubmit('delete');}}>Delete</Button>{' '}
-                <Button outline color="primary" onClick={this.toggle}>Cancel</Button>
+                <Button outline color="primary" hidden={!this.state.hiddenButtons} onClick={()=> this.clearFormFields()}>Cancel</Button>
+                <Button outline color="primary" hidden={this.state.hiddenButtons} onClick={this.toggle}>Cancel</Button>
                 </ModalFooter>
             </Modal>
             </div>

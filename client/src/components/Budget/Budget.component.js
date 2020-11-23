@@ -24,6 +24,7 @@ import {BudgetCharts} from './BudgetCharts.component';
 import {getChartData,getCategories,getYears} from '../Charts/ChartUtils';
 import {categories as categoryColors} from '../Budget/budgetCategories';
 
+
 class Budget extends Component {
     _isMounted = false;
     constructor(props){
@@ -42,7 +43,6 @@ class Budget extends Component {
             loading:'true',
             budgetId:0, 
             buttonFormat:0,
-            newUser:false,
             modalYearFilter:false,
             modalMonthFilter:false,
             modalFilter:false,
@@ -79,7 +79,6 @@ class Budget extends Component {
         this.setState({ [event.target.name]:event.target.value});
     };
     toggle() {
-        if (!this.state.newUser){
             this.setState({
                 modal:!this.state.modal,
                 hiddenButtons:!this.hiddenButtons,
@@ -87,7 +86,6 @@ class Budget extends Component {
             });
             this.clearFormFields();
             this.onDismiss();
-        }
     };
     clearFormFields(){
         this.setState({description:'',amount:'',category:null,subcategories:subcategories,
@@ -130,6 +128,7 @@ class Budget extends Component {
                         const payload = generateUpdateExpensePayload(this.state,token);
                         data = await updateBudgetItem(payload.body,payload.headers);
                     } else {
+                        
                         const payload = generateDeleteExpensePayload(this.state,token);
                         data = await removeBudgetItem(payload.body,payload.headers);
                     };
@@ -137,14 +136,8 @@ class Budget extends Component {
                         this.handleAlert("Oops... Something Went Wrong");
                     } else {
                         if(type ==="add"){
-                            if (this.state.newUser){
-                                this.setState({newUser:false});
-                                this.clearFormFields();
-                                this.handleAlert("Great! Add another entry or click close to see your budget.",'success');    
-                            } else {
                                 this.handleAlert("Success",'success');
                                 this.clearFormFields();   
-                            }    
                         } else {
                             this.toggle();
                         };  
@@ -267,9 +260,8 @@ class Budget extends Component {
                 this.setState({years:years});
                 shiftBudgetData(transformedData);
                 if (transformedData.length === 0){
-                    this.setState({ budget: transformedData, loading:'complete',modal:true,newUser:true, hiddenButtons:true });
-                    this.handleAlert("Welcome " +getName()+", add an entry to begin your journey with Green Financing.",'success');
-                } else {
+                    this.setState({ budget: transformedData, loading:'complete',modal:true, hiddenButtons:true });
+                    } else {
                     this.setState({ budget: transformedData, loading:'complete' });
                 }
                 console.log(years);
@@ -679,7 +671,8 @@ class Budget extends Component {
                 <Button outline color="info" hidden={!this.state.hiddenButtons} onClick={async () => {await this.handleSubmit('add');}}>Add</Button>{' '}
                 <Button outline color="info" hidden={this.state.hiddenButtons} onClick={async () => {await this.handleSubmit('update');}}>Update</Button>{' '}
                 <Button outline color="danger" hidden={this.state.hiddenButtons} onClick={async () => {await this.handleSubmit('delete');}}>Delete</Button>{' '}
-                <Button outline color="primary" onClick={this.toggle}>Cancel</Button>
+                <Button outline color="primary" hidden={!this.state.hiddenButtons} onClick={()=> this.clearFormFields()}>Cancel</Button>
+                <Button outline color="primary" hidden={this.state.hiddenButtons} onClick={this.toggle}>Cancel</Button>
                 </ModalFooter>
             </Modal>
             </div>
