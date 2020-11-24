@@ -1,6 +1,6 @@
 
 import React from 'react';
-import {Button, Card} from 'react-bootstrap';
+import {Button, Card, Container, Col, Row} from 'react-bootstrap';
 import '../../css/Green.css';
 import images from "./emojis.js";
 
@@ -12,8 +12,10 @@ const Info = ({expense}) => {
             <h2> {expense.subcategory},  ${expense.amount} </h2>
             <p> ({expense.description})  </p>
         </Card>
+        <br></br>
         {information.some(e => e.subcategory === expense.subcategory) ? <Fact subcategory = {expense.subcategory} />: null}
         {(expense.subcategory == "Gas") ? <Gas cost = {expense.amount}/>:null}
+        <br></br>
         <EA cost = {expense.amount}/>
         </div>
         )
@@ -29,6 +31,7 @@ function Fact({subcategory}) {
     console.log(e)
     return (
         <Card style = {{backgroundColor: "#FFC857"}}>
+            <br></br>
             <p> <strong> Did You Know? </strong> </p>
             <p>
             {e[0].fact}
@@ -70,9 +73,9 @@ function EA({cost}) {
         let num = cost / 0.66;
         return (
             <Card style = {{backgroundColor: "#eda4a4"}}>
-                <div className = "columns">
+                <div className = "columns is-vcentered">
                 <div className = "column is-one-quarter">
-                    <img className = "logo" src={images["Deworm"]} />
+                    <img className = "logo" style={{float:"left"}}src={images["Deworm"]} />
                 </div>
                 <div className = "column is-half">
                     <p className = "eainfo">
@@ -80,7 +83,7 @@ function EA({cost}) {
                     </p>
                 </div>
                 <div className = "column right is-offset-10" style = {{float: "right"}} >
-                    <Button className = "is-ghost" href = "https://www.evidenceaction.org/dewormtheworld-2/"> Donate </Button>
+                    <Button className = "is-ghost is-pulled-right" href = "https://www.evidenceaction.org/dewormtheworld-2/"> Donate </Button>
                 </div>
                 </div>
             </Card>
@@ -90,9 +93,9 @@ function EA({cost}) {
         let num = cost / 2
         return (
             <Card style = {{backgroundColor: "#eda4a4"}}>
-                <div className = "columns">
+                <div className = "columns is-vcentered">
                 <div className = "column is-one-quarter">
-                    <img className = "logo" src={images["Malaria"]} />
+                    <img className = "logo" style={{float:"left"}}src={images["Malaria"]} />
                 </div>
                 <div className = "column is-half">
                     <p className = "eainfo">
@@ -100,7 +103,7 @@ function EA({cost}) {
                     </p>
                 </div>
                 <div className = "column right is-offset-10" style = {{float: "right"}} >
-                    <Button className = "is-ghost" href = "https://oneacrefund.org/"> Donate </Button>
+                    <Button className = "is-ghost is-pulled-right" href = "https://oneacrefund.org/"> Donate </Button>
                 </div>
                 </div>
             </Card>
@@ -110,12 +113,12 @@ function EA({cost}) {
         let num = cost / 32.27
         return (
             <Card style = {{backgroundColor: "#eda4a4"}}>
-                <div className = "columns">
-                <div className = "column is-one-quarter">
-                    <img className = "logo" src={images["OneAcreFund"]} />
+                <div className = "columns is-vcentered">
+                <div className = "column is-one-quarter ">
+                    <img className = "logo" style={{float:"left"}} src={images["OneAcreFund"]} />
                 </div>
                 <div className = "column is-half">
-                    <p className = "eainfo">
+                    <p className = "eainfo">   
                     With ${cost}, you could help <br/> <strong> {num.toFixed(1)} farmers get out of debt. </strong>
                     </p>
                 </div>

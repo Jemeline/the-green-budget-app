@@ -67,7 +67,7 @@ code {
 } 
 
 .icon:hover { 
-  transform: scale(1.5);
+  transform: scale(1.1);
 }
 
 .iconText {
@@ -85,7 +85,7 @@ code {
 
 h1 {
   margin: 60px;
-  color: #2B9C32;
+  color: #412234;
 }
 
 /* colors:
