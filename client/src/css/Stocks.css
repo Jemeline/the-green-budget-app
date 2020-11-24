@@ -1,0 +1,100 @@
+.tickerselect {
+    margin: auto;
+}
+
+.column {
+    float: left
+}
+
+.leftside, .rightside {
+    width: 50%;
+}
+
+.myStocks {
+    margin: auto;
+    color: #412234;
+    margin-bottom: 15px;
+    
+}
+
+.searchGraph {
+    margin-top: 20px
+}
+
+.mystock {
+    margin-top: 15px;
+    border-radius: 10px
+}
+
+.mystockgraph {
+    width: 75%;
+}
+
+.stockbutton {
+    background-color: #412234;
+    color: white;
+    font-size: 20px;
+    padding: 5px 20px;
+    border-radius: 5px;
+    margin: 10px 0px;
+    cursor: pointer;
+}
+textarea {
+    border-radius: 20px;
+    width: 40%;
+    margin-top: 8px;
+    white-space: normal;
+    text-align: justify;
+    text-align-last: center;
+}
+
+.flex-col-scroll {
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 100%;
+    height: 90vh;
+    width: 100%;
+  }
+
+  .flex-section {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+
+}
+
+#search_container {
+    position:relative; /* IMPORTANT */
+   
+}
+#search_{
+    position: absolute;
+    border:0; /* HAS TO BE SIMILAR TO #autocomplete */
+    font-size:14px; /* HAS TO BE SIMILAR TO #autocomplete */
+    padding:10px; /* IMPORTANT */
+    background: none;
+    left: 10px;
+    text-transform:uppercase;
+    outline:none;
+    border-width: 2px;
+    border-style: solid;
+    border-color: black;
+        
+    
+    
+}
+#autocomplete {
+    position: absolute; /* IMPORTANT */
+    z-index: -1; /* IMPORTANT */
+    border:0; /* HAS TO BE SIMILAR TO #search_ */
+    font-size:14px; /* HAS TO BE SIMILAR TO #search_ */
+    left: 22px;/* ACCORDING TO THE LEFT-PADDING OF #search_ */
+    top:12px; /* ACCORDING TO THE TOP-PADDING OF #search_ */
+    color:gray;
+    
+    
+    
+    
+    
+}

@@ -1,27 +1,25 @@
 import {createMuiTheme} from '@material-ui/core';
 import {getUser} from '../../utils/common';
 
-export function transformBudgetData(data){
+export function transformIncomeData(data){
     return data.map(item => 
         Object.values(item))
 };
 
-export function shiftBudgetData(data){
+export function shiftIncomeData(data){
     data.map(item => {
         item.push(item.shift()); 
         item.push(item.shift());
-        item[4]= "$"+item[4].toFixed(2).toString();
-
-
+        item[3]= "$"+item[3].toFixed(2).toString();
     });
 };
 
 export const tableTheme = createMuiTheme({
     palette: {
       primary: {
-        light: '#412234',
-        main: '#412234',
-        dark: '#412234',
+        light: '#757ce8',
+        main: '#3f50b5',
+        dark: '#002884',
         contrastText: '#fff',
       },
       action: {
@@ -32,29 +30,7 @@ export const tableTheme = createMuiTheme({
 export const regDate = /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
 export const regAmount =/^\$?([1-9]{1}[0-9]{0,2}(\,[0-9]{3})*(\.[0-9]{0,2})?|[1-9]{1}[0-9]{0,}(\.[0-9]{0,2})?|0(\.[0-9]{0,2})?|(\.[0-9]{1,2})?)$/;
           
-
-export const ButtonForm = [
-    {
-        filter:{top: 195,right:5},
-        refresh:{top: 135,right:5},
-        add:{top: 75,right:5},
-        drag:{top: 50,right:5}
-    },
-    {
-        filter:{bottom: 50,right:15},
-        refresh:{bottom: 50,right:90},
-        add:{bottom: 50,right:165},
-        drag:{bottom: 50,right:240}
-    },
-    {
-        filter:{bottom: 125,right:15},
-        refresh:{bottom: 50,right:15},
-        add:{bottom: 50,right:90},
-        drag:{bottom: 125,right:90}
-    },
-];
-
-export function generateAddExpensePayload(state,token){
+export function generateAddIncomePayload(state,token){
     return {
       body: 
       {
@@ -62,7 +38,6 @@ export function generateAddExpensePayload(state,token){
         email:getUser(),
         date: state.date,
         category: state.category.value,
-        subcategory: state.subcategory.value,
         description:state.description,
         amount:state.amount
       },
@@ -72,15 +47,14 @@ export function generateAddExpensePayload(state,token){
       }},
     }
 };
-export function generateUpdateExpensePayload(state,token){
+export function generateUpdateIncomePayload(state,token){
     return {
       body: 
       {
         sessionUser:getUser(),
-        expenseID:state.budgetId,
+        incomeID:state.incomeId,
         date: state.date,
         category: state.category.value,
-        subcategory: state.subcategory.value,
         description:state.description,
         amount:state.amount
       },
@@ -90,12 +64,12 @@ export function generateUpdateExpensePayload(state,token){
       }},
     }
 };
-export function generateDeleteExpensePayload(state,token){
+export function generateDeleteIncomePayload(state,token){
     return {
       body: 
       {
         sessionUser:getUser(),
-        expenseID:state.budgetId
+        incomeID:state.incomeId
       },
       headers: {
         headers: {
@@ -103,12 +77,12 @@ export function generateDeleteExpensePayload(state,token){
       }},
     }
 };
-export function generateBudgetDataPayload(token){
+export function generateIncomeDataPayload(token){
     return {
       body: 
       {
         sessionUser:getUser(),
-        expenseUser:getUser(),
+        incomeUser:getUser(),
       },
       headers: {
         headers: {
@@ -127,12 +101,6 @@ export const tableColumns = [
     },
     {
         name: "Category",
-        options: {
-          filter: true,
-        }
-    },
-    {
-        name: "Subcategory",
         options: {
           filter: true,
         }

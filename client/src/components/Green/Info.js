@@ -28,7 +28,11 @@ function Fact({subcategory}) {
     let e = information.filter(e => e.subcategory === subcategory);
     console.log(e)
     return (
+<<<<<<< HEAD
         <Card style = {{backgroundColor: "#FFC857"}}>
+=======
+        <Card className="green-card">
+>>>>>>> e0f28ba235791275058b17e78c6b368cadec2a08
             <p> <strong> Did You Know? </strong> </p>
             <p>
             {e[0].fact}

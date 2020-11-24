@@ -12,15 +12,14 @@ const updateExpense = require('./updateExpense');
 // Add new expense
 expenses.post('/create-expense',createExpense);
 // Endpoint: '/api/expenses/create-expense'
-// Consumes json parameters: sessionUser, email, month, year, day,
-//      category, description, amount
+// Consumes json parameters: sessionUser, email, date,
+//      category, subcategory, description, amount
 // Example: 
 //        {"sessionUser":"jada_pfeiffer@email.com",
         // "email":"jada_pfeiffer@email.com",
-        // "month":8,
-        // "year":2020,
-        // "day":3,
-        // "category":"social",
+        // "date":"2019-10-10",
+        // "category":"Social",
+        // "subcategory":"Dining",
         // "description":"Date Night",
         // "amount":20.20}
 // Returns json
@@ -32,7 +31,8 @@ expenses.post('/create-expense',createExpense);
 //             "year": 2020,
 //             "month": 8,
 //             "day": 3,
-//             "category": "social",
+//             "category":"Social",
+//             "subcategory":"Dining",
 //             "description": "Date Night",
 //             "amount": 20.2
 //         },
@@ -60,10 +60,9 @@ expenses.post('/read-expense',readExpense);
 //             {
 //                 "id": 1,
 //                 "email": "admin@email.com",
-//                 "year": 2020,
-//                 "month": 11,
-//                 "day": 2,
+//                 "date":"2019-10-10",
 //                 "category": "social",
+                // "subcategory":"Dining",
 //                 "description": "Root Cellar",
 //                 "amount": 25.25
 //             }
@@ -89,10 +88,9 @@ expenses.post('/read-expenses',readExpenses);
 //             {
 //                 "id": 1,
 //                 "email": "admin@email.com",
-//                 "year": 2020,
-//                 "month": 11,
-//                 "day": 2,
+//                 "date":"2019-10-10",
 //                 "category": "social",
+                // "subcategory":"Dining",
 //                 "description": "Root Cellar",
 //                 "amount": 25.25
 //             }
@@ -103,18 +101,18 @@ expenses.post('/read-expenses',readExpenses);
 //                              500 => Generic error
 
 // get all expenses
-expenses.get('/',readAllExpenses);
+// expenses.get('/',readAllExpenses);
 
 //UPDATE
 // Update an expense
 expenses.post('/update-expense',updateExpense);
 // Endpoint: '/api/expenses/update-expense'
-// Consumes json parameters: sessionUser, expenseID, year(optional),month(optional),day(optional),
-//                              category(optional),description(optional),amount(optional)
+// Consumes json parameters: sessionUser, expenseID, date(optional),
+//          category(optional),subcategory(optional),description(optional),amount(optional)
 // Example: 
 //        {"sessionUser":"jada_pfeiffer@email.com",
 //         "expenseID":8,
-//         "year":2020,
+//         "date":"2019-10-10",
 //         "amount":1.01}
 // Returns json
 // Example: 
@@ -122,7 +120,7 @@ expenses.post('/update-expense',updateExpense);
 //         "message": "success",
 //         "data": {
 //             "expenseID": 8,
-//             "year": 2020,
+//             "date":"2019-10-10",
 //             "amount": 1.01
 //         }
 // }
@@ -159,13 +157,13 @@ expenses.post('/delete-expenses',deleteExpenses);
 // Consumes json parameters: sessionUser, expenseUser
 // Example: 
 //        {"sessionUser":"admin@email.com",
-//         "userRemove":"jada_pfeiffer@email.com"}
+//         "expenseUser":"jada_pfeiffer@email.com"}
 // Returns json
 // Example: 
         // {
         //     "message": "success",
         //     "data": {
-        //         "expenseID": 2
+        //         "expenseUser":"jada_pfeiffer@email.com"}
         //     }
         // }
 // Failed request returns       400 => Invalid Parameter or DB error
