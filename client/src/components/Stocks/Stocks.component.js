@@ -43,8 +43,8 @@ class Stocks extends React.Component {
     this.onEnter = this.onEnter.bind(this);
   }
 
-  handleSelectChange(e) {
-    this.setState({tickerValue: e.target.value})
+  handleSelectChange(e,value) {
+    this.setState({tickerAutocomplete: value.slice(-5).split(",").pop().trim()});
   }
 
   handleStockClick() {

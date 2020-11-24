@@ -687,16 +687,16 @@ class Budget extends Component {
                     />  
                     </MuiThemeProvider>      
             </Container>
-                    <Fab icon={<RefreshIcon/>} onClick={async () => {this.setState({year: this.state.defaultYear, month:this.state.defaultMonth, lineLabels:this.state.defaultLineLabels}); await this.renderBudgetTable();}} mainButtonStyles={{backgroundColor: '#3f50b5',outline:'none'}} style={ButtonForm[this.state.buttonFormat].refresh}></Fab>
-                    <Fab icon={<AddIcon/>} onClick={this.toggle} mainButtonStyles={{backgroundColor: '#3f50b5',outline:'none'}} style={ButtonForm[this.state.buttonFormat].add}></Fab>
-                    <Fab icon={<FilterListIcon/>} mainButtonStyles={{backgroundColor: '#3f50b5',outline:'none'}} style={ButtonForm[this.state.buttonFormat].filter}>
-                        <Action style={{backgroundColor: '#01579b',outline:'none'}} onClick={this.toggleFilter}>
+                    <Fab icon={<RefreshIcon/>} onClick={async () => {this.setState({year: this.state.defaultYear, month:this.state.defaultMonth, lineLabels:this.state.defaultLineLabels}); await this.renderBudgetTable();}} mainButtonStyles={{backgroundColor: '#412234',outline:'none'}} style={ButtonForm[this.state.buttonFormat].refresh}></Fab>
+                    <Fab icon={<AddIcon/>} onClick={this.toggle} mainButtonStyles={{backgroundColor: '#412234',outline:'none'}} style={ButtonForm[this.state.buttonFormat].add}></Fab>
+                    <Fab icon={<FilterListIcon/>} mainButtonStyles={{backgroundColor:'#412234',outline:'none'}} style={ButtonForm[this.state.buttonFormat].filter}>
+                        <Action style={{backgroundColor: '#871f78',outline:'none'}} onClick={this.toggleFilter}>
                         <DateRangeIcon/>
                         </Action>
-                        <Action style={{backgroundColor: '#01579b',outline:'none'}} onClick={this.toggleYearFilter}>
+                        <Action style={{backgroundColor: '#871f78',outline:'none'}} onClick={this.toggleYearFilter}>
                         Y
                         </Action>
-                        <Action style={{backgroundColor: '#01579b',outline:'none'}} onClick={this.toggleMonthFilter}>
+                        <Action style={{backgroundColor: '#871f78',outline:'none'}} onClick={this.toggleMonthFilter}>
                         M
                         </Action>
                     </Fab>   

@@ -113,10 +113,10 @@ export const MonthlySavingsRate = (props) => {
             .map(item => item.amount)
             .reduce((prev, curr) => prev + curr, 0);
         let lastMonthSavingsRate;
-        if (thisMonthIncome === 0){
+        if (lastMonthIncome === 0){
             lastMonthSavingsRate = 0;
         } else {
-            lastMonthSavingsRate = ((1-thisMonthExpenses/thisMonthIncome)*100).toFixed(2);
+            lastMonthSavingsRate = ((1-lastMonthExpenses/lastMonthIncome)*100).toFixed(2);
         }
         const differenceSavingsRate = (thisMonthSavingsRate - lastMonthSavingsRate).toFixed(2);
         

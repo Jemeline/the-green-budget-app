@@ -247,7 +247,7 @@ class Income extends Component {
                     />  
                     </MuiThemeProvider>      
             </Container>
-                <Fab icon={<AddIcon/>} onClick={this.toggle} mainButtonStyles={{backgroundColor: '#3f50b5',outline:'none'}} style={{bottom: 5,right:5}}></Fab>
+                <Fab icon={<AddIcon/>} onClick={this.toggle} mainButtonStyles={{backgroundColor: "#412234",outline:'none'}} style={{bottom: 5,right:5}}></Fab>
             </div>
             </div>    
         );

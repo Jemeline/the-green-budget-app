@@ -1,6 +1,10 @@
 import React from 'react';
 import Graph from '../PieChart/Graph.component';
 import '../../css/Stocks.css';
+import ReactLoading from 'react-loading';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+
 require("dotenv").config();
 const alpha = require('alphavantage')({ key: process.env.REACT_APP_ALPHA_VANTAGE_API_KEY});
 
@@ -40,15 +44,17 @@ class StockCard extends React.Component {
       } else if(!this.state.ticker) {
             return (
                 <div>
-                <h2>loading...</h2>
+                <ReactLoading className="loading" type={"spinningBubbles"} color={"#412234"} height={'20%'} width={'20%'} />
                 </div>
             )
         } else {
         return (
             <div className='mystock'>
-           <Graph className={'mystockgraph'} color={'#412234'}title={this.state.ticker} data={this.state.graphData} />
-           <button onClick={() => this.removeStock()}>Remove</button>
-           </div>
+              <IconButton style={{outline:"none",color:"#412234",display: 'flex', marginLeft: 'auto'}} onClick={() => this.removeStock()}>
+                <CloseIcon />
+              </IconButton>
+              <Graph className={'mystockgraph'} color={'#412234'}title={this.state.ticker} data={this.state.graphData} />
+              </div>
         )
     }
 }

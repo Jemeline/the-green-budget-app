@@ -19,9 +19,9 @@ export function shiftBudgetData(data){
 export const tableTheme = createMuiTheme({
     palette: {
       primary: {
-        light: '#757ce8',
-        main: '#3f50b5',
-        dark: '#002884',
+        light: '#412234',
+        main: '#412234',
+        dark: '#412234',
         contrastText: '#fff',
       },
       action: {
