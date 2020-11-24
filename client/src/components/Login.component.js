@@ -148,7 +148,7 @@ class Login extends Component {
                                                 </FormGroup>
                                             </Col>
                                             <Button onClick={async () => {await this.handleLogin();}}
-                                                    color="success"
+                                                    style={{backgroundColor: "#412234", color:"white", outline:"none"}}
                                             >Login</Button>
                                         </Form>
                                         </Container>
@@ -208,7 +208,7 @@ class Login extends Component {
                                                 </Row>
                                                 
                                                 <Button onClick={async () => {await this.handleRegister();}}
-                                                        color="success"
+                                                        style={{backgroundColor: "#412234", color:"white", outline:"none"}}
                                                 >Register</Button>
                                             </Form>
                                             </Container>

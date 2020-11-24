@@ -6,18 +6,12 @@ export const categories = [
     {id:5, value:"Clothing",label:"Clothing",color:'rgba(25, 114, 120,0.2)',colorBorder:'rgba(25, 114, 120,1)',colorHover:'rgba(25, 114, 120,0.7)'},
     {id:6, value:"Medical",label:"Medical",color:'rgba(219,112,147,0.2)',colorBorder:'rgba(219,112,147,1)',colorHover:'rgba(219,112,147,0.7)'},
     {id:7, value:"Health",label:"Health",color:'rgba(165,102,131,0.2)',colorBorder:'rgba(165,102,131,1)',colorHover:'rgba(165,102,131,0.7)'},
-    {id:8, value:"Beauty",label:"Beauty",color:'rgba(238,146,90,0.2)',colorBorder:'rgba(238,146,90,1)',colorHover:'rgba(238,146,90,0.7)'},
     {id:9, value:"Insurance",label:"Insurance",color:'rgba(160,186,209,0.2)',colorBorder:'rgba(160,186,209,1)',colorHover:'rgba(160,186,209,0.7)'},
     {id:10, value:"Personal",label:"Personal",color:'rgba(73,116,169,0.2)',colorBorder:'rgba(73,116,169,1)',colorHover:'rgba(73,116,169,0.7)'},
     {id:11, value:"Debt",label:"Debt",color:'rgba(177,9,103,0.2)',colorBorder:'rgba(177,9,103,1)',colorHover:'rgba177,9,103,0.7)'},
-    {id:12, value:"Retirement",label:"Retirement",color:'rgba(220,70,134,0.2)',colorBorder:'rgba(220,70,134,1)',colorHover:'rgba(220,70,134,0.7)'},
     {id:13, value:"Savings",label:"Savings",color:'rgba(192,73,201,0.2)',colorBorder:'rgba(192,73,201,1)',colorHover:'rgba(192,73,201,0.7)'},
     {id:14, value:"Education",label:"Education",color:'rgba(207,201,73,0.2)',colorBorder:'rgba(207,201,73,1)',colorHover:'rgba(207,201,73,0.7)'},
-    {id:15, value:"Giving",label:"Giving",color:'rgba(94,83,133,0.2)',colorBorder:'rgba(94,83,133,1)',colorHover:'rgba(94,83,133,0.7)'},
-    {id:16, value:"Taxes",label:"Taxes",color:'rgba(72,70,27,0.2)',colorBorder:'rgba(72,70,27,1)',colorHover:'rgba(72,70,27,0.7)'},
-    {id:17, value:"Investments",label:"Investments",color:'rgba(25,61,237,0.2)',colorBorder:'rgba(25,61,237,1)',colorHover:'rgba(25,61,237,0.7)'},
-    {id:18, value:"Hobbies",label:"Hobbies",color:'rgba(44,117,64,0.2)',colorBorder:'rgba(44,117,64,1)',colorHover:'rgba(44,117,64,0.7)'},
-    {id:19, value:"Pets",label:"Pets",color:'rgba(232,175,49,0.2)',colorBorder:'rgba(232,175,49,1)',colorHover:'rgba(232,175,49,0.7)'},
+    {id:15, value:"Entertainment",label:"Entertainment",color:'rgba(44,117,64,0.2)',colorBorder:'rgba(44,117,64,0.2)',colorHover:'rgba(44,117,64,0.2)'},
     {id:20, value:"Other",label:"Other",color:'rgba(18,23,60,0.2)',colorBorder:'rgba(18,23,60,1)',colorHover:'rgba(18,23,60,0.7)'}
 ];
 
@@ -69,7 +63,54 @@ export const subcategories = [
     { id:40,parent:"Medical",value: 'General', label: 'General'},
     { id:41,parent:"Medical",value: 'Procedures', label: 'Procedures'},
     { id:42,parent:"Medical",value: 'Other', label: 'Other'},
-        
+
+    
+   
+    { id:44,parent:"Insurance",value: 'Car Insurance', label: 'Car Insurance'},
+    { id:45,parent:"Insurance",value: 'Health Insurance', label: 'Health Insurance'},
+    { id:46,parent:"Insurance",value: 'Home Insurance', label: 'Home Insurance'},
+    { id:47,parent:"Insurance",value: 'Renter Insurance', label: 'Renter Insurance'},
+    { id:48,parent:"Insurance",value: 'Life Insurance', label: 'Life Insurance'},
+    { id:53,parent:"Insurance",value: 'Other', label: 'Other'},
+    
+    { id:49,parent:"Personal",value: 'Gym Membership', label: 'Gym Membership'},
+    { id:50,parent:"Personal",value: 'Haircut', label: 'Haircut'},
+    { id:51,parent:"Personal",value: 'Cosmetics', label: 'Procedures'},
+    { id:52,parent:"Personal",value: 'Subscriptions', label: 'Subscriptions'},
+    { id:54,parent:"Personal",value: 'Babysitting', label: 'Babysitting'},
+    { id:55,parent:"Personal",value: 'Other', label: 'Other'},
+
+    { id:56,parent:"Debt",value: 'Personal Loans', label: 'Personal Loans'},
+    { id:57,parent:"Debt",value: 'Credit Cards', label: 'Credit Card'},
+    { id:58,parent:"Debt",value: 'Student Loans', label: 'Student Loans'},
+    { id:59,parent:"Debt",value: 'Other', label: 'Other'},
+    
+    { id:60,parent:"Savings",value: 'Emergency Fund', label: 'Emergency Fund'},
+    { id:61,parent:"Savings",value: 'Other', label: 'Other'},
+
+    { id:43,parent:"Other",value: 'Beauty', label: 'Beauty'},  
+    { id:62,parent:"Other",value: 'Retirement', label: 'Retirement'}, 
+    { id:67,parent:"Other",value: 'Giving', label: 'Giving'}, 
+    { id:68,parent:"Other",value: 'Taxes', label: 'Taxes'}, 
+    { id:69,parent:"Other",value: 'Pets', label: 'Pets'}, 
+    { id:70,parent:"Other",value: 'Investments', label: 'Investments'}, 
+    { id:71,parent:"Other",value: 'Hobbies', label: 'Hobbies'}, 
+    { id:72,parent:"Other",value: 'Other', label: 'Other'},
+
+    { id:63,parent:"Education",value: 'College Fund', label: 'Personal Loans'},
+    { id:64,parent:"Education",value: 'College Tuition', label: 'Credit Card'},
+    { id:65,parent:"Education",value: 'School Supplies', label: 'Student Loans'},
+    { id:66,parent:"Education",value: 'Books', label: 'Books'},
+    { id:66,parent:"Education",value: 'Other', label: 'Other'},
+
+    { id:73,parent:"Entertainment",value: 'Bars', label: 'Bars'},  
+    { id:74,parent:"Entertainment",value: 'Games', label: 'Games'}, 
+    { id:75,parent:"Entertainment",value: 'Media Subscriptions', label: 'Media Subscriptions'}, 
+    { id:76,parent:"Entertainment",value: 'Movies', label: 'Movies'}, 
+    { id:77,parent:"Entertainment",value: 'Concerts', label: 'Concerts'}, 
+    { id:78,parent:"Entertainment",value: 'Vacations', label: 'Vacations'}, 
+    { id:79,parent:"Entertainment",value: 'Books', label: 'Books'}, 
+    { id:80,parent:"Entertainment",value: 'Other', label: 'Other'},
 ];
 export const monthLabels=["January","February","March","April","May","June","July", "August","September","October","November","December"];
 export const monthNames = [

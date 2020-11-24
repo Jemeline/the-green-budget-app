@@ -91,7 +91,7 @@ class Green extends Component {
         <Container className = "infoContainer rounded height-full">
           
            {this.state.display ? <Info type = {this.state.type} expense = {this.state.expense}/>:null}
-           {!this.state.display ? <div className = "fill is-vcentered is-centered"> <p className = "text-center is-centered" id = "infolabel">  click a expense to show more information </p> </div>:null}
+           {!this.state.display ? <div className = "fill is-vcentered is-centered"> <p className = "text-center is-centered" id = "infolabel">  Click an expense to show more information </p> </div>:null}
            
        </Container>
         </Col>

@@ -192,6 +192,7 @@ class Budget extends Component {
                 this.handleAlert("Please Fill All Fields");
             }else {
                 this.setState({month:this.state.tempMonth,tempMonth:this.state.defaultMonth})
+                this.setState({year:this.state.tempYear,tempYear:this.state.defaultYear})
                 this.toggleMonthFilter();
                 await this.renderBudgetTable();
                 await this.filterThisMonth();
